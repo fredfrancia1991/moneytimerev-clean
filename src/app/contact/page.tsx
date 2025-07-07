@@ -9,11 +9,10 @@ export default function ContactPage() {
   const [form, setForm] = useState({ nom: '', email: '', message: '' })
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElemenpm uninstall firebase-admin firebase-functions
-    npm install firebase-admin@11.11.1 firebase-functions@3.23.0 --force
-    nt | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
