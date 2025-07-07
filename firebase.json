@@ -1,10 +1,6 @@
 {
-  "functions": {
-    "source": "functions",
-    "runtime": "nodejs18",
-    "codebase": "default"
-  },
   "hosting": {
+    "site": "moneytimerev-e2351",
     "public": "out",
     "ignore": [
       "firebase.json",
