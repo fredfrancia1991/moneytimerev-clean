@@ -21,7 +21,7 @@ export const sendContactEmail = functions.firestore
 
     const mailOptions = {
       from: `"MoneyTime Rev’" <${functions.config().gmail.login}>`,
-      to: 'tonadresse@tonmail.fr', // 🔁 Mets ici ton email réel
+      to: functions.config().gmail.to,
       subject: `📬 Nouveau message de ${nom}`,
       html: `<p><strong>Email :</strong> ${email}</p><p>${message}</p>`
     }

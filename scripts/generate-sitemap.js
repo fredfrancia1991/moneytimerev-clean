@@ -1,5 +1,3 @@
-
-
 const BASE_URL = "https://moneytimerev.fr"; // Remplace par ton domaine
 
 // Ajoute ici toutes tes routes à indexer dans le sitemap
@@ -29,6 +27,5 @@ const path = require('path');
 const fs = require('fs');
 
 fs.writeFileSync(path.join(__dirname, '..', 'public', 'sitemap.xml'), sitemap);
-
 
 console.log("✅ Sitemap généré dans public/sitemap.xml");

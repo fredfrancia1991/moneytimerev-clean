@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Erreur Google Apps Script:", errorText);
-      return NextResponse.json({ status: 'error', message: 'Erreur lors de l’envoi au script' }, { status: 500 });
+      return NextResponse.json({ status: 'error', message: 'Erreur lors de l\u2019envoi au script' }, { status: 500 });
     }
 
     return NextResponse.json({ status: 'success' });

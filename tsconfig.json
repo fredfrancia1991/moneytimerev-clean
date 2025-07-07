@@ -28,7 +28,8 @@
   },
   "include": [
     "index.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "src/**/*"
   ],
   "exclude": [
     "lib"
