@@ -32,6 +32,22 @@ Copy `.env.example` to `.env` and provide your Firebase credentials:
 - `FIREBASE_CLIENT_EMAIL`
 - `FIREBASE_PRIVATE_KEY`
 
+For the Cloud Function that envoie les emails, configure les identifiants Gmail
+via la CLI Firebase :
+
+```bash
+firebase functions:config:set \
+  gmail.login="votre.adresse@gmail.com" \
+  gmail.pass="votre_mot_de_passe" \
+  gmail.to="destinataire@gmail.com"
+```
+
+Ensuite déployez la configuration :
+
+```bash
+firebase deploy --only functions
+```
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
