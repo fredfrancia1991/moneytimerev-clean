@@ -8,7 +8,7 @@ function InfoBulle({ text }: { text: string }) {
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    if (!show) return;
+    if (!show) return undefined;
     const handleClick = (e: MouseEvent | TouchEvent) => {
       if (!ref.current?.contains(e.target as Node)) setShow(false);
     };
@@ -19,6 +19,7 @@ function InfoBulle({ text }: { text: string }) {
       document.removeEventListener("touchstart", handleClick);
     };
   }, [show]);
+  
 
   const handleToggle = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
