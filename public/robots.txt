@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://moneytimerev.ew.r.appspot.com//sitemap.xml

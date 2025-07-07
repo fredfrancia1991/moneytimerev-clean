@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Nunito:wght@400;700&display=swap');
+
+.main {
+  background: #f4f6f7;
+  color: #2a2a2a;
+  font-family: 'Inter', 'Nunito', Arial, sans-serif;
+  padding: 3rem 1.5rem;
+  min-height: 100vh;
+}
+
+.title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #187072;
+  margin-bottom: 2rem;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(24, 112, 114, 0.12);
+  padding: 1.8rem 1.5rem;
+  max-width: 320px;
+  width: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 28px rgba(24, 112, 114, 0.18);
+}
+
+.card h2 {
+  font-size: 1.5rem;
+  color: #12544e;
+  margin-bottom: 1rem;
+}
+
+.card ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1rem;
+  font-size: 1em;
+}
+
+.card ul li {
+  margin-bottom: 0.6rem;
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.card ul li::before {
+  content: '✔️';
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.price {
+  margin-top: 1.2rem;
+  font-size: 1.1rem;
+  color: #187072;
+}
+
+.badge, .badgeLight {
+  position: absolute;
+  top: -12px;
+  right: 16px;
+  background: #187072;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.badgeLight {
+  background: #e0f0ef;
+  color: #12544e;
+}
+
+.tableSection {
+  max-width: 800px;
+  margin: auto;
+}
+
+.tableTitle {
+  font-size: 1.7rem;
+  text-align: center;
+  margin-bottom: 1.2rem;
+  color: #12544e;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(24, 112, 114, 0.08);
+  padding: 1rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1em;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid #d9d9d9;
+  padding: 1rem 1.2rem;
+  text-align: center;
+}
+
+.table th {
+  color: #187072;
+  font-weight: 700;
+  font-size: 1.1rem;
+  background-color: #e0f0ef;
+}
+
+.table tbody tr:nth-child(even) {
+  background: #f4f9f9;
+}
+
+.note {
+  text-align: center;
+  color: #555555;
+  font-size: 0.95rem;
+  margin-top: 1.5rem;
+  line-height: 1.5;
+}

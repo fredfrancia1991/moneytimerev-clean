@@ -1,0 +1,185 @@
+/* Import police Inter + Nunito */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Nunito:wght@400;700&display=swap');
+
+:root {
+  --background: #f4f6f7;
+  --card: #fffefa;
+  --primary: #187072;
+  --primary-dark: #12544e;
+  --text: #2a2a2a;
+  --text-light: #555555;
+  --border: #d9d9d9;
+  --radius: 18px;
+  --shadow: 0 8px 32px 0 rgba(24, 112, 114, 0.1);
+  --font-main: 'Inter', 'Nunito', Arial, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--text);
+  font-family: var(--font-main);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.mainHero {
+  background: #e0f0ef;
+  border-radius: 14px;
+  padding: 2.5em 1.2em 1.2em;
+  margin: 1em auto 2em;
+  max-width: 600px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  color: var(--primary-dark);
+  font-weight: 700;
+  font-size: 1.3em;
+}
+
+a.cta {
+  display: inline-block;
+  margin-top: 1.2em;
+  padding: 0.75em 1.6em;
+  font-size: 1.1em;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+a.cta:hover {
+  background: var(--primary-dark);
+}
+
+/* Formulaire */
+.inputBlock {
+  margin-bottom: 1.8em;
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 1.08em;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.inputWrapper {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 6px rgba(24, 112, 114, 0.06);
+  display: flex;
+  align-items: center;
+  padding: 0.75em 1.2em;
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+.input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1.12em;
+  color: var(--text);
+  flex: 1;
+  padding: 0.55em 0;
+  padding-left: 32px; /* ajustement optimisé */
+}
+
+.input:focus {
+  box-shadow: 0 0 0 3px rgba(24, 112, 114, 0.3);
+  background: #fff;
+  border-radius: var(--radius);
+  transition: box-shadow 0.25s ease;
+}
+
+.button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 1em 1.6em;
+  font-size: 1.15em;
+  font-weight: 700;
+  box-shadow: 0 3px 14px rgba(24, 112, 114, 0.4);
+  cursor: pointer;
+  transform: translateY(0);
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  margin-top: 1em;
+}
+
+.button:hover,
+.button:focus {
+  background: var(--primary-dark);
+  box-shadow: 0 5px 22px rgba(18, 84, 78, 0.6);
+  transform: translateY(-3px);
+}
+
+.euro {
+  color: var(--text-light);
+  font-size: 1em;
+  margin-right: 0.5em;
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.infoIcon {
+  cursor: pointer;
+  margin-left: 0.4em;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.infoIcon:hover,
+.infoIcon:focus {
+  opacity: 1;
+}
+
+.infoBubble {
+  position: absolute;
+  z-index: 10;
+  background: var(--card);
+  color: var(--text-light);
+  box-shadow: 0 6px 26px rgba(24, 112, 114, 0.15);
+  border-radius: var(--radius);
+  font-size: 0.98em;
+  padding: 1.1em 1.4em;
+  top: 2.2em;
+  left: 0;
+  min-width: 240px;
+  max-width: 320px;
+  border: 1px solid var(--border);
+}
+
+.resultSection {
+  background: var(--background);
+  border-radius: 22px;
+  box-shadow: 0 3px 20px rgba(24, 112, 114, 0.08);
+  padding: 2.8em 3.2em;
+  margin: 3em auto;
+  max-width: 720px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.confidential {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 1.05em;
+}
+.resultMessage {
+  margin-top: 2rem;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  background-color: #e8f3fa;
+  color: #187072;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: opacity 0.3s ease;
+}

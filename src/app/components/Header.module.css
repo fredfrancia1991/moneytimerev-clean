@@ -1,0 +1,39 @@
+.header {
+  background: var(--card);
+  border-bottom: 1.5px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0.8em 1.4em;
+}
+.logo {
+  font-weight: 900;
+  font-size: 1.8em;
+  color: var(--primary);
+  letter-spacing: 0.02em;
+  font-family: var(--font-main);
+}
+.rev {
+  color: var(--text-light);
+  font-size: 0.6em;
+  font-style: italic;
+}
+.link {
+  margin-left: 1.5em;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1em;
+  padding: 5px 12px;
+  border-radius: var(--radius);
+  transition: background 0.18s, color 0.18s;
+}
+.link:hover {
+  background: #e8f0fe;
+  color: var(--primary);
+}

@@ -1,0 +1,10 @@
+runtime: nodejs20
+instance_class: F1
+env: standard
+
+handlers:
+  - url: /api/.*
+    script: auto
+
+  - url: /.*
+    script: auto
