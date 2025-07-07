@@ -115,27 +115,27 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main>
-        <div className="apple-container">
-          <div className="apple-sub">
-            Faites le point sur vos finances en 2 minutes.
-            <br /> Gratuit, confidentiel, sans engagement.
-          </div>
-          <form className="formApple" onSubmit={handleSubmit}>
-            <InputWithInfo label="Revenus mensuels" value={revenus} onChange={e => setRevenus(e.target.value)} info={infos.revenus} name="revenus" />
-            <InputWithInfo label="Dépenses essentielles" value={besoins} onChange={e => setBesoins(e.target.value)} info={infos.besoins} name="besoins" />
-            <InputWithInfo label="Loisirs" value={loisirs} onChange={e => setLoisirs(e.target.value)} info={infos.loisirs} name="loisirs" />
-            <InputWithInfo label="Épargne mensuelle" value={epargneMensuelle} onChange={e => setEpargneMensuelle(e.target.value)} info={infos.epargneMensuelle} name="epargneMensuelle" />
-            <InputWithInfo label="Épargne actuelle" value={epargneActuelle} onChange={e => setEpargneActuelle(e.target.value)} info={infos.epargneActuelle} name="epargneActuelle" />
-            <button type="submit" className="apple-btn">Obtenir mon diagnostic</button>
-          </form>
-          {resultMessage && (
-            <div className="resultMessage">
-              {resultMessage}
-            </div>
-          )}
-        </div>
+      <main className="bg-[#e0f0ef] p-6 max-w-3xl mx-auto my-8 rounded-xl text-center text-[#12544e] shadow-md font-bold text-lg">
+        <p>
+          Faites le point sur vos finances en 2 minutes.<br />
+          Gratuit, confidentiel, sans engagement.
+        </p>
       </main>
+
+      <form className="formApple max-w-3xl mx-auto px-4" onSubmit={handleSubmit}>
+        <InputWithInfo label="Revenus mensuels" value={revenus} onChange={e => setRevenus(e.target.value)} info={infos.revenus} name="revenus" />
+        <InputWithInfo label="Dépenses essentielles" value={besoins} onChange={e => setBesoins(e.target.value)} info={infos.besoins} name="besoins" />
+        <InputWithInfo label="Loisirs" value={loisirs} onChange={e => setLoisirs(e.target.value)} info={infos.loisirs} name="loisirs" />
+        <InputWithInfo label="Épargne mensuelle" value={epargneMensuelle} onChange={e => setEpargneMensuelle(e.target.value)} info={infos.epargneMensuelle} name="epargneMensuelle" />
+        <InputWithInfo label="Épargne actuelle" value={epargneActuelle} onChange={e => setEpargneActuelle(e.target.value)} info={infos.epargneActuelle} name="epargneActuelle" />
+        <button type="submit" className="bg-[#187072] text-white font-bold py-3 px-6 rounded-xl hover:opacity-90 mt-4">Obtenir mon diagnostic</button>
+      </form>
+
+      {resultMessage && (
+        <div className="resultMessage max-w-2xl mx-auto mt-6 text-center bg-[#e8f3fa] text-[#187072] font-medium p-4 rounded shadow">
+          {resultMessage}
+        </div>
+      )}
       <Footer />
     </>
   );

@@ -1,277 +1,64 @@
-/* /src/app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Importation de la police Google : Karla (humaine, lisible) */
+/* Import Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap');
 
-:root {
-  --background: #f2f5f9;           /* fond doux, lisible, humain */
-  --card: #ffffff;                 /* cartes claires */
-  --primary: #187072;              /* vert pétrole sérieux, humain */
-  --primary-hover: #12544e;        /* couleur hover boutons */
-  --text: #363945;                 /* texte principal sombre doux */
-  --text-light: #6e6e73;           /* texte secondaire doux */
-  --border: #e2e8f0;               /* bordures discrètes */
-  --radius: 12px;                  /* coins arrondis modérés */
-  --shadow: 0 6px 18px rgba(0,0,0,0.07); /* ombre douce, professionnelle */
-  --font-main: 'Karla', Arial, sans-serif; /* police manuelle, lisible */
-}
-
-html, body {
-  background: var(--background);
-  color: var(--text);
-  font-family: var(--font-main);
-  margin: 0;
-  padding: 0;
-  line-height: 1.5;
-}
-
-main {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 2em 1em;
-}
-
-h1, h2, h3 {
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.3;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-input[type="number"],
-input[type="text"],
-input[type="email"] {
-  width: 100%;
-  border: 1px solid var(--border);
-  background: #fff;
-  padding: 0.8em 1em;
-  font-size: 1em;
-  border-radius: var(--radius);
-  margin-top: 0.4em;
-  margin-bottom: 1em;
-  outline: none;
-  transition: border 0.2s;
-}
-
-input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(24,112,114,0.15);
-}
-
-button.cta, .button, .apple-btn {
-  background: var(--primary);
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  border-radius: var(--radius);
-  padding: 0.9em 1.2em;
-  font-size: 1em;
-  cursor: pointer;
-  box-shadow: var(--shadow);
-  transition: background 0.2s, transform 0.1s;
-}
-
-button.cta:hover, .button:hover, .apple-btn:hover {
-  background: var(--primary-hover);
-  transform: translateY(-2px);
-}
-
-.card, .apple-container, .resultSection {
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 1.5em;
-  border: 1px solid var(--border);
-  margin-bottom: 1.5em;
-}
-
-.infoBubble {
-  position: absolute;
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 0.7em 1em;
-  border: 1px solid var(--border);
-  font-size: 0.9em;
-  color: var(--text);
-  width: 220px;
-  z-index: 10;
-}
-
-.labelRow {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 500;
-}
-
-.inputWrapper {
-  position: relative;
-}
-
-.inputWrapper .euro {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-light);
-}
-
-.inputWrapper input {
-  padding-left: 26px;
-}
-
-.mainHero {
-  text-align: center;
-  background: var(--card);
-  padding: 2em 1em;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  margin-bottom: 2em;
-}
-
-footer {
-  text-align: center;
-  padding: 2em;
-  font-size: 0.9em;
-  color: var(--text-light);
-  border-top: 1px solid var(--border);
-}
-
-@media (max-width: 600px) {
-  main {
-    padding: 1em;
+@layer base {
+  :root {
+    --background: #f2f5f9;
+    --card: #ffffff;
+    --primary: #187072;
+    --primary-hover: #12544e;
+    --text: #363945;
+    --text-light: #6e6e73;
+    --border: #e2e8f0;
+    --radius: 12px;
+    --shadow: 0 6px 18px rgba(0,0,0,0.07);
+    --font-main: 'Karla', Arial, sans-serif;
   }
 
-  .card, .resultSection, .apple-container, .mainHero {
-    padding: 1.2em;
+  html, body {
+    background: var(--background);
+    color: var(--text);
+    font-family: var(--font-main);
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 }
-/* Texte d'accroche */
-.apple-sub {
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: #187072;
-  text-align: center;
-  margin-bottom: 2rem;
-}
 
-/* Bloc input avec plus d'espace */
-.inputBlock {
-  margin-bottom: 1.5rem;
-}
-
-/* Ligne label avec info bulle */
-.labelRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-
-/* Champs input stylés */
-.inputWrapper {
-  position: relative;
-}
-
-.inputWrapper .euro {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #187072;
-  font-weight: bold;
-}
-
-.inputWrapper input.input {
-  width: 100%;
-  padding: 0.8rem 0.8rem 0.8rem 2rem;
-  font-size: 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  outline: none;
-  transition: border-color 0.3s;
-}
-
-.inputWrapper input.input:focus {
-  border-color: #187072;
-}
-
-/* Bouton principal plus large et animé */
-.apple-btn {
-  width: 100%;
-  padding: 1rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  background-color: #187072;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-.apple-btn:hover,
-.apple-btn:focus {
-  background-color: #0f514f;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-/* Info bulles */
-.infoIcon {
-  margin-left: 0.5rem;
-  cursor: pointer;
-  position: relative;
-}
-
-.infoBubble {
-  position: absolute;
-  top: 120%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #ffffff;
-  color: #333;
-  padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  max-width: 220px;
-  font-size: 0.9rem;
-  z-index: 10;
-}
-
-/* Responsive: améliorer marges sur mobile */
-@media (max-width: 600px) {
-  .apple-container {
-    padding: 1rem;
+@layer components {
+  .inputWrapper {
+    @apply relative;
   }
-  .apple-sub {
-    font-size: 1.3rem;
+
+  .infoIcon {
+    @apply ml-2 cursor-pointer relative;
   }
-}
-.resultMessage {
-  margin: 2rem auto 0 auto; /* marge en haut + centré horizontalement */
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  background-color: #e8f3fa;
-  color: #187072;
-  font-weight: 500;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  max-width: 600px; /* limite la largeur pour garder une bonne lisibilité */
-  opacity: 0;
-  transform: translateY(10px);
-  animation: fadeIn 0.5s ease forwards;
-}
 
+  .infoBubble {
+    @apply absolute top-full left-1/2 transform -translate-x-1/2 bg-white text-sm text-gray-700 p-3 rounded shadow z-10 max-w-xs;
+  }
 
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .apple-btn {
+    @apply w-full p-4 text-base font-semibold text-white bg-[color:var(--primary)] rounded-lg transition hover:bg-[color:var(--primary-hover)];
+  }
+
+  .resultMessage {
+    @apply mt-8 mx-auto p-4 max-w-xl bg-[#e8f3fa] text-[#187072] text-center font-medium rounded shadow animate-fadeIn;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
