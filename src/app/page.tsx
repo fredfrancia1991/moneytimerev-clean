@@ -5,6 +5,7 @@ import { useState } from "react";
 import InputWithInfo from "./components/InputWithInfo";
 import Hero from "./components/Hero";
 import SEO from "./components/SEO";
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
 
 export default function Home() {
   const [revenus, setRevenus] = useState("");
@@ -40,26 +41,36 @@ export default function Home() {
   };
 
   return (
-    <>
+    <div className="bg-gradient-to-b from-[#f5f6fa] to-white text-[#363945] font-sans min-h-screen flex flex-col">
       <SEO title="MoneyTime Rev’ – Diagnostic financier gratuit" description="Faites le point sur vos revenus, vos dépenses et votre épargne. Gratuit, confidentiel, en moins de 2 minutes." />
       <Header />
-      <Hero />
+      <main className="flex-1 animate-fade-in px-4 sm:px-6">
+        <Hero />
 
-      <form className="formApple max-w-3xl mx-auto px-4" onSubmit={handleSubmit}>
-        <InputWithInfo label="Revenus mensuels" value={revenus} onChange={e => setRevenus(e.target.value)} info={infos.revenus} name="revenus" />
-        <InputWithInfo label="Dépenses essentielles" value={besoins} onChange={e => setBesoins(e.target.value)} info={infos.besoins} name="besoins" />
-        <InputWithInfo label="Loisirs" value={loisirs} onChange={e => setLoisirs(e.target.value)} info={infos.loisirs} name="loisirs" />
-        <InputWithInfo label="Épargne mensuelle" value={epargneMensuelle} onChange={e => setEpargneMensuelle(e.target.value)} info={infos.epargneMensuelle} name="epargneMensuelle" />
-        <InputWithInfo label="Épargne actuelle" value={epargneActuelle} onChange={e => setEpargneActuelle(e.target.value)} info={infos.epargneActuelle} name="epargneActuelle" />
-        <button type="submit" className="bg-[#187072] text-white font-bold py-3 px-6 rounded-xl hover:opacity-90 mt-4">Obtenir mon diagnostic</button>
-      </form>
+        <form className="formApple max-w-3xl mx-auto" onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <InputWithInfo label="Revenus mensuels" value={revenus} onChange={e => setRevenus(e.target.value)} info={infos.revenus} name="revenus" />
+            <InputWithInfo label="Dépenses essentielles" value={besoins} onChange={e => setBesoins(e.target.value)} info={infos.besoins} name="besoins" />
+            <InputWithInfo label="Loisirs" value={loisirs} onChange={e => setLoisirs(e.target.value)} info={infos.loisirs} name="loisirs" />
+            <InputWithInfo label="Épargne mensuelle" value={epargneMensuelle} onChange={e => setEpargneMensuelle(e.target.value)} info={infos.epargneMensuelle} name="epargneMensuelle" />
+            <InputWithInfo label="Épargne actuelle" value={epargneActuelle} onChange={e => setEpargneActuelle(e.target.value)} info={infos.epargneActuelle} name="epargneActuelle" />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-[#187072] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-6 flex items-center justify-center gap-2"
+          >
+            <CheckCircleIcon className="w-5 h-5 text-white" />
+            Obtenir mon diagnostic
+          </button>
+        </form>
 
-      {resultMessage && (
-        <div className="resultMessage max-w-2xl mx-auto mt-6 text-center bg-[#e8f3fa] text-[#187072] font-medium p-4 rounded shadow">
-          {resultMessage}
-        </div>
-      )}
+        {resultMessage && (
+          <div className="resultMessage max-w-2xl mx-auto mt-6 text-center bg-[#e8f3fa] text-[#187072] font-medium p-4 rounded shadow animate-fade-in">
+            {resultMessage}
+          </div>
+        )}
+      </main>
       <Footer />
-    </>
+    </div>
   );
 }
