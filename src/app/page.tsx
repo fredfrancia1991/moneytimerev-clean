@@ -7,11 +7,7 @@ import Hero from "./components/Hero";
 import SEO from "./components/SEO";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { db } from "./lib/firebase";
-<<<<<<< HEAD
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-=======
-import { collection, addDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
->>>>>>> main
 
 export default function Home() {
   const [step, setStep] = useState<"info" | "budget">("info");
@@ -27,31 +23,16 @@ export default function Home() {
   const [epargneMensuelle, setEpargneMensuelle] = useState("");
   const [epargneActuelle, setEpargneActuelle] = useState("");
 
-<<<<<<< HEAD
   const [blocks, setBlocks] = useState<string[]>([]);
   const [summary, setSummary] = useState<string | null>(null);
-=======
-  const [resultMessage, setResultMessage] = useState<string | null>(null);
-  const [recordId, setRecordId] = useState<string | null>(null);
->>>>>>> main
   const [emailSent, setEmailSent] = useState(false);
 
   const infos = {
-    revenus: "Tes revenus mensuels après impôts et charges sociales.",
-    besoins: "Tes dépenses essentielles comme loyer, électricité, assurances...",
-    loisirs: "Tes dépenses pour le plaisir : sorties, abonnements, vacances...",
-    epargneMensuelle: "Ce que tu mets de côté chaque mois (même petit !)",
-    epargneActuelle: "Ce que tu as déjà de côté sur tes comptes, livrets, etc.",
-<<<<<<< HEAD
-  };
-
-  const handleInfoSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (consent) {
-      setStep("budget");
-    }
-=======
->>>>>>> main
+    revenus: "Ce que tu touches chaque mois (net, après impôts).",
+    besoins: "Ce dont tu as besoin pour vivre (logement, factures, alimentation...).",
+    loisirs: "Ce qui te fait plaisir ou te fait du bien (activités, sorties...).",
+    epargneMensuelle: "Ce que tu arrives à mettre de côté chaque mois.",
+    epargneActuelle: "Ce que tu as déjà mis de côté aujourd’hui.",
   };
 
   const handleInfoSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -68,11 +49,8 @@ export default function Home() {
     const loisirsNum = parseFloat(loisirs) || 0;
     const epargneNum = parseFloat(epargneMensuelle) || 0;
     const epargneActNum = parseFloat(epargneActuelle) || 0;
-<<<<<<< HEAD
 
-    if (revenuNum === 0) {
-      return;
-    }
+    if (revenuNum === 0) return;
 
     const totalDepenses = besoinsNum + loisirsNum;
     const reste = revenuNum - totalDepenses;
@@ -106,46 +84,8 @@ export default function Home() {
     setSummary(
       "Ce que tu viens de saisir n’est pas qu’un calcul. C’est un aperçu de ta réalité.\nCe bilan n’est pas là pour te dire comment vivre, mais pour mettre des mots sur ce que tu traverses.\nSi tu veux recevoir ce retour par mail, ou en parler gratuitement 30 minutes, c’est possible, à ton rythme."
     );
-  };
-
-  const handleSendEmail = async () => {
-    const revenuNum = parseFloat(revenus) || 0;
-    const besoinsNum = parseFloat(besoins) || 0;
-    const loisirsNum = parseFloat(loisirs) || 0;
-    const epargneNum = parseFloat(epargneMensuelle) || 0;
-    const epargneActNum = parseFloat(epargneActuelle) || 0;
-
-    const totalDepenses = besoinsNum + loisirsNum;
-    const reste = revenuNum - totalDepenses;
-    const seuilPrecaution = totalDepenses * 3;
-
-    const blocText = blocks.join("\n");
-    const resume = `${blocText}\n${summary ?? ''}`;
 
     await addDoc(collection(db, "diagnostics"), {
-=======
-    const totalDepenses = besoinsNum + loisirsNum + epargneNum;
-
-    if (revenuNum === 0) {
-      setResultMessage("Merci d'indiquer au moins un revenu pour établir votre diagnostic.");
-      return;
-    }
-
-    const prct = (n: number) => Math.round((n / revenuNum) * 100);
-
-    let message = `Répartition : ${prct(besoinsNum)}% besoins / ${prct(loisirsNum)}% loisirs / ${prct(epargneNum)}% épargne.`;
-    if (totalDepenses > revenuNum) {
-      message += " Budget déficitaire.";
-    }
-    if (epargneActNum >= revenuNum * 3) {
-      message += " Épargne de précaution suffisante.";
-    } else {
-      message += " Épargne de précaution insuffisante.";
-    }
-    setResultMessage(message);
-
-    const docRef = await addDoc(collection(db, "diagnostics"), {
->>>>>>> main
       prenom,
       nom,
       email,
@@ -155,37 +95,17 @@ export default function Home() {
       loisirs: loisirsNum,
       epargneMensuelle: epargneNum,
       epargneActuelle: epargneActNum,
-<<<<<<< HEAD
       totalDepenses,
       reste,
       seuilPrecaution,
-      resume,
-      mailRequested: true,
-      createdAt: serverTimestamp(),
-    });
-
-    setEmailSent(true);
-=======
-      profile: message,
+      resume: `${bloc1}\n${bloc2}\n${bloc3}\n${summary ?? ""}`,
       mailRequested: false,
-      rdvRequested: false,
       createdAt: serverTimestamp(),
     });
-    setRecordId(docRef.id);
   };
 
   const handleSendEmail = async () => {
-    if (!recordId) return;
-    await updateDoc(doc(db, "diagnostics", recordId), { mailRequested: true });
     setEmailSent(true);
-  };
-
-  const handleRdv = async () => {
-    if (recordId) {
-      await updateDoc(doc(db, "diagnostics", recordId), { rdvRequested: true });
-    }
-    window.open("https://calendly.com/votre-lien", "_blank");
->>>>>>> main
   };
 
   return (
@@ -216,18 +136,18 @@ export default function Home() {
           <>
             <form className="formApple max-w-3xl mx-auto" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <InputWithInfo label="Revenus nets mensuels" value={revenus} onChange={e => setRevenus(e.target.value)} info={infos.revenus} name="revenus" />
-                <InputWithInfo label="Dépenses besoins" value={besoins} onChange={e => setBesoins(e.target.value)} info={infos.besoins} name="besoins" />
-                <InputWithInfo label="Dépenses loisirs" value={loisirs} onChange={e => setLoisirs(e.target.value)} info={infos.loisirs} name="loisirs" />
-                <InputWithInfo label="Épargne mensuelle" value={epargneMensuelle} onChange={e => setEpargneMensuelle(e.target.value)} info={infos.epargneMensuelle} name="epargneMensuelle" />
-                <InputWithInfo label="Épargne disponible" value={epargneActuelle} onChange={e => setEpargneActuelle(e.target.value)} info={infos.epargneActuelle} name="epargneActuelle" />
+                <InputWithInfo label="Ce que tu touches chaque mois" value={revenus} onChange={e => setRevenus(e.target.value)} info={infos.revenus} name="revenus" />
+                <InputWithInfo label="Tes besoins pour vivre" value={besoins} onChange={e => setBesoins(e.target.value)} info={infos.besoins} name="besoins" />
+                <InputWithInfo label="Tes plaisirs et loisirs" value={loisirs} onChange={e => setLoisirs(e.target.value)} info={infos.loisirs} name="loisirs" />
+                <InputWithInfo label="Ce que tu mets de côté chaque mois" value={epargneMensuelle} onChange={e => setEpargneMensuelle(e.target.value)} info={infos.epargneMensuelle} name="epargneMensuelle" />
+                <InputWithInfo label="Ce que tu as déjà mis de côté" value={epargneActuelle} onChange={e => setEpargneActuelle(e.target.value)} info={infos.epargneActuelle} name="epargneActuelle" />
               </div>
               <button type="submit" className="w-full bg-[#187072] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-6 flex items-center justify-center gap-2">
                 <CheckCircleIcon className="w-5 h-5 text-white" />
                 Obtenir mon diagnostic
               </button>
             </form>
-<<<<<<< HEAD
+
             {blocks.length > 0 && (
               <div className="resultMessage max-w-2xl mx-auto mt-6 text-center space-y-4 bg-[#e8f3fa] text-[#187072] font-medium p-4 rounded shadow animate-fade-in">
                 {blocks.map((b, i) => (
@@ -236,32 +156,16 @@ export default function Home() {
                 {summary && <p className="mt-2 font-normal">{summary}</p>}
               </div>
             )}
+
             {blocks.length > 0 && !emailSent && (
               <button onClick={handleSendEmail} className="w-full max-w-2xl mx-auto bg-[#26436E] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-6 block">
                 Recevoir mon mini bilan par mail
-=======
-            {resultMessage && (
-              <div className="resultMessage max-w-2xl mx-auto mt-6 text-center bg-[#e8f3fa] text-[#187072] font-medium p-4 rounded shadow animate-fade-in">
-                {resultMessage}
-              </div>
-            )}
-            {recordId && !emailSent && (
-              <button onClick={handleSendEmail} className="w-full max-w-2xl mx-auto bg-[#26436E] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-6 block">
-                Recevoir un mini bilan et des conseils par email
->>>>>>> main
               </button>
             )}
+
             {emailSent && (
               <p className="text-center text-[#187072] font-medium mt-4">Email envoyé !</p>
             )}
-<<<<<<< HEAD
-=======
-            {recordId && (
-              <button onClick={handleRdv} className="w-full max-w-2xl mx-auto bg-[#187072] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-4 block">
-                Prendre un RDV gratuit de 30 minutes
-              </button>
-            )}
->>>>>>> main
           </>
         )}
       </main>
