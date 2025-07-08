@@ -1,7 +1,16 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../lib/firebase";
 
 export default function Header() {
+  const [connected, setConnected] = useState(false);
+
+  useEffect(() => {
+    return onAuthStateChanged(auth, user => setConnected(!!user));
+  }, []);
+
   return (
     <header className="bg-white shadow-sm border-b border-[#e2e8f0]">
       <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -10,9 +19,13 @@ export default function Header() {
         </span>
         <nav className="space-x-4 text-sm font-semibold text-[#187072]">
           <Link href="/" className="hover:underline">Accueil</Link>
-          <Link href="/offres" className="hover:underline">Offres</Link>
+          <Link href="/" className="hover:underline">Diagnostic</Link>
           <Link href="/contact" className="hover:underline">Contact</Link>
-          <Link href="/mentions-legales" className="hover:underline">Mentions légales</Link>
+          {connected ? (
+            <Link href="/dashboard" className="hover:underline">Mon espace</Link>
+          ) : (
+            <Link href="/login" className="hover:underline">Connexion</Link>
+          )}
         </nav>
       </div>
     </header>

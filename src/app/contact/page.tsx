@@ -1,28 +1,15 @@
-'use client'
-
-import { useState } from 'react'
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    alert('Message envoyé ! (non connecté)')
-  }
-
-  return (
-    <main style={{ padding: '2rem', maxWidth: '600px', margin: 'auto' }}>
-      <h1>Contact</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <input type="text" name="name" placeholder="Votre nom" value={form.name} onChange={handleChange} required />
-        <input type="email" name="email" placeholder="Votre email" value={form.email} onChange={handleChange} required />
-        <textarea name="message" placeholder="Votre message" value={form.message} onChange={handleChange} required />
-        <button type="submit">Envoyer</button>
-      </form>
-    </main>
-  )
+  return (    <>
+      <Header />
+      <main className="max-w-3xl mx-auto p-4 mt-6 text-[#363945]">
+        <h1 className="text-2xl font-bold text-center text-[#26436E] mb-6">Contact</h1>
+        <p className="mb-4">Pour toute question, vous pouvez nous écrire à l’adresse suivante&nbsp;: <a href="mailto:contact@moneytimerev.fr" className="text-[#187072] underline">contact@moneytimerev.fr</a>.</p>
+        <p>Nous vous répondrons dans les meilleurs délais.</p>
+      </main>
+      <Footer />
+    </>
+  );
 }

@@ -1,5 +1,6 @@
 import './globals.css'
 import { Nunito } from 'next/font/google'
+import CookieBanner from './components/CookieBanner'
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -10,7 +11,10 @@ const nunito = Nunito({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" className={nunito.variable}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <CookieBanner />
+      </body>
     </html>
   )
 }
