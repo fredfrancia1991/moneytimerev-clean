@@ -17,14 +17,14 @@ export default function Login() {
 
   useEffect(() => {
     return onAuthStateChanged(auth, (user) => {
-      if (user) router.replace("/dashboard");
+      if (user) router.replace("/client");
     });
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await signInWithEmailAndPassword(auth, email, password);
-    router.replace("/dashboard");
+    router.replace("/client");
   };
 
   return (

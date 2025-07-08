@@ -22,7 +22,7 @@ export default function Header() {
           <Link href="/" className="hover:underline">Diagnostic</Link>
           <Link href="/contact" className="hover:underline">Contact</Link>
           {connected ? (
-            <Link href="/dashboard" className="hover:underline">Mon espace</Link>
+            <Link href="/client" className="hover:underline">Mon espace</Link>
           ) : (
             <Link href="/login" className="hover:underline">Connexion</Link>
           )}
