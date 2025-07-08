@@ -37,16 +37,17 @@ export const sendContactEmail = functions.firestore
 // Envoi du mini bilan lorsque 'mailRequested' passe a true
 export const sendDiagnosticEmail = functions.firestore
   .document('diagnostics/{id}')
-  .onCreate(async (snap) => {
-    const data = snap.data()
+  .onWrite(async (change) => {
+    const before = change.before.exists ? change.before.data() : null
+    const after = change.after.exists ? change.after.data() : null
 
-    if (!data.mailRequested) {
+    if (!after || !after.mailRequested || (before && before.mailRequested === after.mailRequested)) {
       return null
     }
 
-    const prenom = data.prenom || ''
-    const email = data.email || ''
-    const resume = data.resume || ''
+    const prenom = after.prenom || ''
+    const email = after.email || ''
+    const resume = after.resume || ''
 
     const mailOptions = {
       from: `"MoneyTime Rev’" <${functions.config().gmail.login}>`,
@@ -57,8 +58,8 @@ export const sendDiagnosticEmail = functions.firestore
 
     try {
       await transporter.sendMail(mailOptions)
-      console.log('Diagnostic email sent')
+      console.log('✅ Diagnostic email sent')
     } catch (error) {
-      console.error('Erreur e-mail diagnostic', error)
+      console.error('❌ Erreur e-mail diagnostic', error)
     }
   })
