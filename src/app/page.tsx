@@ -118,31 +118,48 @@ export default function Home() {
     <div className="bg-[#F5F6FA] min-h-screen flex flex-col font-sans text-[#26436E]">
       <Header />
       <main className="flex-1 px-4 py-6">
-        <form onSubmit={handleSubmit} className="space-y-4 max-w-xl mx-auto">
-          <div>
-            <label className="font-semibold" htmlFor="revenus">Revenus mensuels</label>
-            <input id="revenus" name="revenus" type="number" value={revenus} onChange={e => setRevenus(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
-          </div>
-          <div>
-            <label className="font-semibold" htmlFor="besoins">Dépenses essentielles</label>
-            <input id="besoins" name="besoins" type="number" value={besoins} onChange={e => setBesoins(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
-          </div>
-          <div>
-            <label className="font-semibold" htmlFor="loisirs">Dépenses de confort</label>
-            <input id="loisirs" name="loisirs" type="number" value={loisirs} onChange={e => setLoisirs(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
-          </div>
-          <div>
-            <label className="font-semibold" htmlFor="epargneMensuelle">Épargne mensuelle</label>
-            <input id="epargneMensuelle" name="epargneMensuelle" type="number" value={epargneMensuelle} onChange={e => setEpargneMensuelle(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
-          </div>
-          <div>
-            <label className="font-semibold" htmlFor="epargneDisponible">Épargne disponible</label>
-            <input id="epargneDisponible" name="epargneDisponible" type="number" value={epargneDisponible} onChange={e => setEpargneDisponible(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
-          </div>
-          <button type="submit" className="w-full bg-[#187072] text-white font-bold py-3 rounded-xl">
-            {buttonLabel}
-          </button>
-        </form>
+      <form onSubmit={handleSubmit} className="space-y-4 max-w-xl mx-auto">
+  <div>
+    <label className="font-semibold" htmlFor="prenom">Prénom</label>
+    <input id="prenom" name="prenom" type="text" value={prenom} onChange={e => setPrenom(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
+  </div>
+  <div>
+    <label className="font-semibold" htmlFor="nom">Nom</label>
+    <input id="nom" name="nom" type="text" value={nom} onChange={e => setNom(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
+  </div>
+  <div>
+    <label className="font-semibold" htmlFor="email">Email</label>
+    <input id="email" name="email" type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
+  </div>
+  <div className="flex items-center gap-2">
+    <input id="consent" name="consent" type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} />
+    <label htmlFor="consent" className="text-sm">J’accepte que mes données soient utilisées pour m’envoyer ce bilan.</label>
+  </div>
+  <div>
+    <label className="font-semibold" htmlFor="revenus">Revenus mensuels</label>
+    <input id="revenus" name="revenus" type="number" value={revenus} onChange={e => setRevenus(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
+  </div>
+  <div>
+    <label className="font-semibold" htmlFor="besoins">Dépenses essentielles</label>
+    <input id="besoins" name="besoins" type="number" value={besoins} onChange={e => setBesoins(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
+  </div>
+  <div>
+    <label className="font-semibold" htmlFor="loisirs">Dépenses de confort</label>
+    <input id="loisirs" name="loisirs" type="number" value={loisirs} onChange={e => setLoisirs(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
+  </div>
+  <div>
+    <label className="font-semibold" htmlFor="epargneMensuelle">Épargne mensuelle</label>
+    <input id="epargneMensuelle" name="epargneMensuelle" type="number" value={epargneMensuelle} onChange={e => setEpargneMensuelle(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
+  </div>
+  <div>
+    <label className="font-semibold" htmlFor="epargneDisponible">Épargne disponible</label>
+    <input id="epargneDisponible" name="epargneDisponible" type="number" value={epargneDisponible} onChange={e => setEpargneDisponible(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
+  </div>
+  <button type="submit" className="w-full bg-[#187072] text-white font-bold py-3 rounded-xl">
+    {buttonLabel}
+  </button>
+</form>
+
 
         {loading && (
           <div ref={resultRef} className="mt-6 text-center">
