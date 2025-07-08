@@ -45,3 +45,14 @@ export default function Login() {
             onChange={e => setPassword(e.target.value)}
             placeholder="Mot de passe"
             className="w-full border p-2 rounded"
+            required
+          />
+          <button type="submit" className="w-full bg-[#187072] text-white py-2 rounded">
+            Se connecter
+          </button>
+        </form>
+      </main>
+      <Footer />
+    </>
+  );
+}
