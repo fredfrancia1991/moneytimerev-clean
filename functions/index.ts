@@ -47,19 +47,19 @@ export const sendDiagnosticEmail = functions.firestore
 
     const prenom = after.prenom || ''
     const email = after.email || ''
-    const profile = after.profile || ''
+    const resume = after.resume || ''
 
     const mailOptions = {
       from: `"MoneyTime Rev’" <${functions.config().gmail.login}>`,
       to: email,
       subject: 'Votre mini bilan MoneyTime Rev’',
-      html: `<p>Bonjour ${prenom},</p><p>${profile}</p><p><a href="https://calendly.com/votre-lien">Prendre un RDV gratuit de 30 minutes</a></p>`
+      html: `<p>Bonjour ${prenom},</p><p>${resume.replace(/\n/g, '<br>')}</p><p><a href="https://calendly.com/votre-lien">Prendre un RDV gratuit de 30 minutes</a></p>`
     }
 
     try {
       await transporter.sendMail(mailOptions)
-      console.log('Diagnostic email sent')
+      console.log('✅ Diagnostic email sent')
     } catch (error) {
-      console.error('Erreur e-mail diagnostic', error)
+      console.error('❌ Erreur e-mail diagnostic', error)
     }
   })
