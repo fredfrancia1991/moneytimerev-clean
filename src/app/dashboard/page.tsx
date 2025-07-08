@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "../lib/firebase";
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
