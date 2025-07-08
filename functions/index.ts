@@ -26,7 +26,7 @@ export const sendDiagnosticEmail = functions.firestore
     }
 
     const prenom = after.prenom || 'Utilisateur'
-    const email = after.email
+    const email = after.email || ''
     const resume = after.resume || ''
 
     const mailOptions = {

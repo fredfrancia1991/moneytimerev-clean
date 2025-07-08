@@ -1,17 +1,13 @@
 "use client";
+
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { useState } from "react";
-import InputWithInfo from "./components/InputWithInfo";
-import Hero from "./components/Hero";
-import SEO from "./components/SEO";
-import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import { useState, useRef, useEffect } from "react";
+import styles from "./page.module.css";
 import { db } from "./lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function Home() {
-  const [step, setStep] = useState<"info" | "budget">("info");
-
   const [prenom, setPrenom] = useState("");
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
@@ -21,34 +17,34 @@ export default function Home() {
   const [besoins, setBesoins] = useState("");
   const [loisirs, setLoisirs] = useState("");
   const [epargneMensuelle, setEpargneMensuelle] = useState("");
-  const [epargneActuelle, setEpargneActuelle] = useState("");
+  const [epargneDisponible, setEpargneDisponible] = useState("");
 
   const [blocks, setBlocks] = useState<string[]>([]);
   const [summary, setSummary] = useState<string | null>(null);
   const [emailSent, setEmailSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const infos = {
-    revenus: "Ce que tu touches chaque mois (net, après impôts).",
-    besoins: "Ce dont tu as besoin pour vivre (logement, factures, alimentation...).",
-    loisirs: "Ce qui te fait plaisir ou te fait du bien (activités, sorties...).",
-    epargneMensuelle: "Ce que tu arrives à mettre de côté chaque mois.",
-    epargneActuelle: "Ce que tu as déjà mis de côté aujourd’hui.",
-  };
-
-  const handleInfoSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (consent) {
-      setStep("budget");
-    }
-  };
+  const resultRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (blocks.length > 0) {
+      setBlocks([]);
+      setSummary(null);
+      setEmailSent(false);
+      setRevenus("");
+      setBesoins("");
+      setLoisirs("");
+      setEpargneMensuelle("");
+      setEpargneDisponible("");
+      return;
+    }
+
     const revenuNum = parseFloat(revenus) || 0;
     const besoinsNum = parseFloat(besoins) || 0;
     const loisirsNum = parseFloat(loisirs) || 0;
     const epargneNum = parseFloat(epargneMensuelle) || 0;
-    const epargneActNum = parseFloat(epargneActuelle) || 0;
+    const epargneDispoNum = parseFloat(epargneDisponible) || 0;
 
     if (revenuNum === 0) return;
 
@@ -71,7 +67,7 @@ export default function Home() {
         ? "Tu sembles trouver un certain équilibre. Pas parfait, mais fonctionnel."
         : "Tu arrives peut-être à t’accorder des petits moments pour toi. C’est une force quand c’est possible.";
 
-    const ratioEpargne = seuilPrecaution ? epargneActNum / seuilPrecaution : 0;
+    const ratioEpargne = seuilPrecaution ? epargneDispoNum / seuilPrecaution : 0;
     const bloc3 =
       ratioEpargne < 0.5
         ? "Ton épargne actuelle ne couvre pas encore les imprévus. Mais ça ne veut pas dire que tu fais mal. Ça veut dire que la vie est parfois plus rapide que l’épargne."
@@ -79,11 +75,14 @@ export default function Home() {
         ? "Tu avances vers un peu plus de sécurité. Ce que tu construis compte."
         : "Tu as peut-être une petite base de sécurité. Et ça change tout dans les moments difficiles.";
 
-    setBlocks([bloc1, bloc2, bloc3]);
+    const resumeText =
+      "Ce que tu viens de saisir n’est pas qu’un calcul. C’est un aperçu de ta réalité.\nCe bilan n’est pas là pour te dire comment vivre, mais pour mettre des mots sur ce que tu traverses.\nSi tu veux recevoir ce retour par mail, ou en parler gratuitement 30 minutes, c’est possible, à ton rythme.";
 
-    setSummary(
-      "Ce que tu viens de saisir n’est pas qu’un calcul. C’est un aperçu de ta réalité.\nCe bilan n’est pas là pour te dire comment vivre, mais pour mettre des mots sur ce que tu traverses.\nSi tu veux recevoir ce retour par mail, ou en parler gratuitement 30 minutes, c’est possible, à ton rythme."
-    );
+    const fullSummary = `${bloc1}\n${bloc2}\n${bloc3}\n${resumeText}`;
+
+    setBlocks([bloc1, bloc2, bloc3]);
+    setSummary(resumeText);
+    setLoading(true);
 
     await addDoc(collection(db, "diagnostics"), {
       prenom,
@@ -94,79 +93,80 @@ export default function Home() {
       besoins: besoinsNum,
       loisirs: loisirsNum,
       epargneMensuelle: epargneNum,
-      epargneActuelle: epargneActNum,
+      epargneDisponible: epargneDispoNum,
       totalDepenses,
       reste,
       seuilPrecaution,
-      resume: `${bloc1}\n${bloc2}\n${bloc3}\n${summary ?? ""}`,
+      resume: fullSummary,
       mailRequested: false,
       createdAt: serverTimestamp(),
     });
+
+    setTimeout(() => {
+      setLoading(false);
+      resultRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 2000);
   };
 
-  const handleSendEmail = async () => {
+  const handleSendEmail = () => {
     setEmailSent(true);
   };
 
+  const buttonLabel = blocks.length > 0 ? "Refaire le diagnostic" : "Commencer le diagnostic gratuit";
+
   return (
-    <div className="bg-gradient-to-b from-[#f5f6fa] to-white text-[#363945] font-sans min-h-screen flex flex-col">
-      <SEO title="MoneyTime Rev’ – Diagnostic financier gratuit" description="Faites le point sur vos revenus, vos dépenses et votre épargne. Gratuit, confidentiel, en moins de 2 minutes." />
+    <div className="bg-[#F5F6FA] min-h-screen flex flex-col font-sans text-[#26436E]">
       <Header />
-      <main className="flex-1 animate-fade-in px-4 sm:px-6">
-        <Hero />
-        {step === "info" && (
-          <form className="formApple max-w-3xl mx-auto" onSubmit={handleInfoSubmit}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <input type="text" value={prenom} onChange={e => setPrenom(e.target.value)} placeholder="Prénom" required className="border border-gray-300 rounded-lg p-2" />
-              <input type="text" value={nom} onChange={e => setNom(e.target.value)} placeholder="Nom" required className="border border-gray-300 rounded-lg p-2" />
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" required className="sm:col-span-2 border border-gray-300 rounded-lg p-2" />
-              <label className="flex items-center space-x-2 sm:col-span-2 text-sm">
-                <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} required />
-                <span>J’accepte la collecte de mes données</span>
-              </label>
+      <main className="flex-1 px-4 py-6">
+        <form onSubmit={handleSubmit} className="space-y-4 max-w-xl mx-auto">
+          <div>
+            <label className="font-semibold" htmlFor="revenus">Revenus mensuels</label>
+            <input id="revenus" name="revenus" type="number" value={revenus} onChange={e => setRevenus(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
+          </div>
+          <div>
+            <label className="font-semibold" htmlFor="besoins">Dépenses essentielles</label>
+            <input id="besoins" name="besoins" type="number" value={besoins} onChange={e => setBesoins(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
+          </div>
+          <div>
+            <label className="font-semibold" htmlFor="loisirs">Dépenses de confort</label>
+            <input id="loisirs" name="loisirs" type="number" value={loisirs} onChange={e => setLoisirs(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
+          </div>
+          <div>
+            <label className="font-semibold" htmlFor="epargneMensuelle">Épargne mensuelle</label>
+            <input id="epargneMensuelle" name="epargneMensuelle" type="number" value={epargneMensuelle} onChange={e => setEpargneMensuelle(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
+          </div>
+          <div>
+            <label className="font-semibold" htmlFor="epargneDisponible">Épargne disponible</label>
+            <input id="epargneDisponible" name="epargneDisponible" type="number" value={epargneDisponible} onChange={e => setEpargneDisponible(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2" />
+          </div>
+          <button type="submit" className="w-full bg-[#187072] text-white font-bold py-3 rounded-xl">
+            {buttonLabel}
+          </button>
+        </form>
+
+        {loading && (
+          <div ref={resultRef} className="mt-6 text-center">
+            <p>Analyse de votre situation en cours…</p>
+            <div className="mt-4 flex justify-center">
+              <span className={styles.loader}></span>
             </div>
-            <button type="submit" className="w-full bg-[#187072] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-6 flex items-center justify-center gap-2">
-              <CheckCircleIcon className="w-5 h-5 text-white" />
-              Commencer
-            </button>
-          </form>
+          </div>
         )}
 
-        {step === "budget" && (
-          <>
-            <form className="formApple max-w-3xl mx-auto" onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <InputWithInfo label="Ce que tu touches chaque mois" value={revenus} onChange={e => setRevenus(e.target.value)} info={infos.revenus} name="revenus" />
-                <InputWithInfo label="Tes besoins pour vivre" value={besoins} onChange={e => setBesoins(e.target.value)} info={infos.besoins} name="besoins" />
-                <InputWithInfo label="Tes plaisirs et loisirs" value={loisirs} onChange={e => setLoisirs(e.target.value)} info={infos.loisirs} name="loisirs" />
-                <InputWithInfo label="Ce que tu mets de côté chaque mois" value={epargneMensuelle} onChange={e => setEpargneMensuelle(e.target.value)} info={infos.epargneMensuelle} name="epargneMensuelle" />
-                <InputWithInfo label="Ce que tu as déjà mis de côté" value={epargneActuelle} onChange={e => setEpargneActuelle(e.target.value)} info={infos.epargneActuelle} name="epargneActuelle" />
-              </div>
-              <button type="submit" className="w-full bg-[#187072] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-6 flex items-center justify-center gap-2">
-                <CheckCircleIcon className="w-5 h-5 text-white" />
-                Obtenir mon diagnostic
-              </button>
-            </form>
-
-            {blocks.length > 0 && (
-              <div className="resultMessage max-w-2xl mx-auto mt-6 text-center space-y-4 bg-[#e8f3fa] text-[#187072] font-medium p-4 rounded shadow animate-fade-in">
-                {blocks.map((b, i) => (
-                  <p key={i}>{b}</p>
-                ))}
-                {summary && <p className="mt-2 font-normal">{summary}</p>}
-              </div>
-            )}
-
-            {blocks.length > 0 && !emailSent && (
-              <button onClick={handleSendEmail} className="w-full max-w-2xl mx-auto bg-[#26436E] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-6 block">
+        {blocks.length > 0 && !loading && (
+          <div ref={resultRef} className={`${styles.resultCard} mt-6 max-w-xl mx-auto text-[#363945]`}>
+            {blocks.map((b, i) => (
+              <p key={i} className="mb-2">{b}</p>
+            ))}
+            {summary && <p className={`${styles.coachingSuggestion} mt-2`}>{summary}</p>}
+            {!emailSent ? (
+              <button onClick={handleSendEmail} className="w-full bg-[#26436E] text-white font-bold py-3 px-6 rounded-xl mt-6">
                 Recevoir mon mini bilan par mail
               </button>
-            )}
-
-            {emailSent && (
+            ) : (
               <p className="text-center text-[#187072] font-medium mt-4">Email envoyé !</p>
             )}
-          </>
+          </div>
         )}
       </main>
       <Footer />
