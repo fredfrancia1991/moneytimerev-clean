@@ -1,4 +1,6 @@
 "use client";
+export const dynamic = "force-dynamic";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "../lib/firebase";
@@ -12,7 +14,7 @@ interface Diagnostic {
   prenom?: string;
   nom?: string;
   email?: string;
-  createdAt?: { seconds: number }; // plus précis que `any`
+  createdAt?: { seconds: number };
 }
 
 export default function Dashboard() {
@@ -26,7 +28,7 @@ export default function Dashboard() {
         router.replace("/login");
         return;
       }
-      
+
       const isAdmin = u.email === "frederic.francia@icloud.com";
       setAdmin(isAdmin);
 
