@@ -7,7 +7,11 @@ import Hero from "./components/Hero";
 import SEO from "./components/SEO";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { db } from "./lib/firebase";
+<<<<<<< HEAD
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+=======
+import { collection, addDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
+>>>>>>> main
 
 export default function Home() {
   const [step, setStep] = useState<"info" | "budget">("info");
@@ -23,8 +27,13 @@ export default function Home() {
   const [epargneMensuelle, setEpargneMensuelle] = useState("");
   const [epargneActuelle, setEpargneActuelle] = useState("");
 
+<<<<<<< HEAD
   const [blocks, setBlocks] = useState<string[]>([]);
   const [summary, setSummary] = useState<string | null>(null);
+=======
+  const [resultMessage, setResultMessage] = useState<string | null>(null);
+  const [recordId, setRecordId] = useState<string | null>(null);
+>>>>>>> main
   const [emailSent, setEmailSent] = useState(false);
 
   const infos = {
@@ -33,6 +42,16 @@ export default function Home() {
     loisirs: "Tes dépenses pour le plaisir : sorties, abonnements, vacances...",
     epargneMensuelle: "Ce que tu mets de côté chaque mois (même petit !)",
     epargneActuelle: "Ce que tu as déjà de côté sur tes comptes, livrets, etc.",
+<<<<<<< HEAD
+  };
+
+  const handleInfoSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (consent) {
+      setStep("budget");
+    }
+=======
+>>>>>>> main
   };
 
   const handleInfoSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -42,13 +61,14 @@ export default function Home() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const revenuNum = parseFloat(revenus) || 0;
     const besoinsNum = parseFloat(besoins) || 0;
     const loisirsNum = parseFloat(loisirs) || 0;
     const epargneNum = parseFloat(epargneMensuelle) || 0;
     const epargneActNum = parseFloat(epargneActuelle) || 0;
+<<<<<<< HEAD
 
     if (revenuNum === 0) {
       return;
@@ -103,6 +123,29 @@ export default function Home() {
     const resume = `${blocText}\n${summary ?? ''}`;
 
     await addDoc(collection(db, "diagnostics"), {
+=======
+    const totalDepenses = besoinsNum + loisirsNum + epargneNum;
+
+    if (revenuNum === 0) {
+      setResultMessage("Merci d'indiquer au moins un revenu pour établir votre diagnostic.");
+      return;
+    }
+
+    const prct = (n: number) => Math.round((n / revenuNum) * 100);
+
+    let message = `Répartition : ${prct(besoinsNum)}% besoins / ${prct(loisirsNum)}% loisirs / ${prct(epargneNum)}% épargne.`;
+    if (totalDepenses > revenuNum) {
+      message += " Budget déficitaire.";
+    }
+    if (epargneActNum >= revenuNum * 3) {
+      message += " Épargne de précaution suffisante.";
+    } else {
+      message += " Épargne de précaution insuffisante.";
+    }
+    setResultMessage(message);
+
+    const docRef = await addDoc(collection(db, "diagnostics"), {
+>>>>>>> main
       prenom,
       nom,
       email,
@@ -112,6 +155,7 @@ export default function Home() {
       loisirs: loisirsNum,
       epargneMensuelle: epargneNum,
       epargneActuelle: epargneActNum,
+<<<<<<< HEAD
       totalDepenses,
       reste,
       seuilPrecaution,
@@ -121,6 +165,27 @@ export default function Home() {
     });
 
     setEmailSent(true);
+=======
+      profile: message,
+      mailRequested: false,
+      rdvRequested: false,
+      createdAt: serverTimestamp(),
+    });
+    setRecordId(docRef.id);
+  };
+
+  const handleSendEmail = async () => {
+    if (!recordId) return;
+    await updateDoc(doc(db, "diagnostics", recordId), { mailRequested: true });
+    setEmailSent(true);
+  };
+
+  const handleRdv = async () => {
+    if (recordId) {
+      await updateDoc(doc(db, "diagnostics", recordId), { rdvRequested: true });
+    }
+    window.open("https://calendly.com/votre-lien", "_blank");
+>>>>>>> main
   };
 
   return (
@@ -162,6 +227,7 @@ export default function Home() {
                 Obtenir mon diagnostic
               </button>
             </form>
+<<<<<<< HEAD
             {blocks.length > 0 && (
               <div className="resultMessage max-w-2xl mx-auto mt-6 text-center space-y-4 bg-[#e8f3fa] text-[#187072] font-medium p-4 rounded shadow animate-fade-in">
                 {blocks.map((b, i) => (
@@ -173,11 +239,29 @@ export default function Home() {
             {blocks.length > 0 && !emailSent && (
               <button onClick={handleSendEmail} className="w-full max-w-2xl mx-auto bg-[#26436E] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-6 block">
                 Recevoir mon mini bilan par mail
+=======
+            {resultMessage && (
+              <div className="resultMessage max-w-2xl mx-auto mt-6 text-center bg-[#e8f3fa] text-[#187072] font-medium p-4 rounded shadow animate-fade-in">
+                {resultMessage}
+              </div>
+            )}
+            {recordId && !emailSent && (
+              <button onClick={handleSendEmail} className="w-full max-w-2xl mx-auto bg-[#26436E] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-6 block">
+                Recevoir un mini bilan et des conseils par email
+>>>>>>> main
               </button>
             )}
             {emailSent && (
               <p className="text-center text-[#187072] font-medium mt-4">Email envoyé !</p>
             )}
+<<<<<<< HEAD
+=======
+            {recordId && (
+              <button onClick={handleRdv} className="w-full max-w-2xl mx-auto bg-[#187072] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-4 block">
+                Prendre un RDV gratuit de 30 minutes
+              </button>
+            )}
+>>>>>>> main
           </>
         )}
       </main>
