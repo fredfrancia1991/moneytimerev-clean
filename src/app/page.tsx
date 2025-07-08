@@ -6,21 +6,40 @@ import InputWithInfo from "./components/InputWithInfo";
 import Hero from "./components/Hero";
 import SEO from "./components/SEO";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import { db } from "./lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function Home() {
+  const [step, setStep] = useState<"info" | "budget">("info");
+
+  const [prenom, setPrenom] = useState("");
+  const [nom, setNom] = useState("");
+  const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
+
   const [revenus, setRevenus] = useState("");
   const [besoins, setBesoins] = useState("");
   const [loisirs, setLoisirs] = useState("");
   const [epargneMensuelle, setEpargneMensuelle] = useState("");
   const [epargneActuelle, setEpargneActuelle] = useState("");
-  const [resultMessage, setResultMessage] = useState<string | null>(null);
+
+  const [blocks, setBlocks] = useState<string[]>([]);
+  const [summary, setSummary] = useState<string | null>(null);
+  const [emailSent, setEmailSent] = useState(false);
 
   const infos = {
     revenus: "Tes revenus mensuels après impôts et charges sociales.",
     besoins: "Tes dépenses essentielles comme loyer, électricité, assurances...",
     loisirs: "Tes dépenses pour le plaisir : sorties, abonnements, vacances...",
     epargneMensuelle: "Ce que tu mets de côté chaque mois (même petit !)",
-    epargneActuelle: "Ce que tu as déjà de côté sur tes comptes, livrets, etc."
+    epargneActuelle: "Ce que tu as déjà de côté sur tes comptes, livrets, etc.",
+  };
+
+  const handleInfoSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (consent) {
+      setStep("budget");
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,15 +48,79 @@ export default function Home() {
     const besoinsNum = parseFloat(besoins) || 0;
     const loisirsNum = parseFloat(loisirs) || 0;
     const epargneNum = parseFloat(epargneMensuelle) || 0;
-    const totalDepenses = besoinsNum + loisirsNum + epargneNum;
+    const epargneActNum = parseFloat(epargneActuelle) || 0;
 
     if (revenuNum === 0) {
-      setResultMessage("Merci d'indiquer au moins un revenu pour établir votre diagnostic.");
-    } else if (totalDepenses > revenuNum) {
-      setResultMessage("Attention : vos dépenses dépassent vos revenus. Il est temps d’agir !");
-    } else {
-      setResultMessage("Bravo ! Vos finances sont équilibrées, continuez ainsi.");
+      return;
     }
+
+    const totalDepenses = besoinsNum + loisirsNum;
+    const reste = revenuNum - totalDepenses;
+    const seuilPrecaution = totalDepenses * 3;
+
+    const bloc1 =
+      reste < -50
+        ? "Il est possible que tu sois déjà à découvert, ou très proche. Tu fais sûrement comme tu peux avec ce que tu as."
+        : reste < 100
+        ? "Tu sembles gérer au plus juste. Il n’y a peut-être pas de marge, mais tu tiens."
+        : "Il te reste peut-être un peu en fin de mois. Ce n’est pas forcément confortable, mais c’est un début de souffle.";
+
+    const ratioLoisirs = revenuNum ? loisirsNum / revenuNum : 0;
+    const bloc2 =
+      ratioLoisirs < 0.1
+        ? "Tu es peut-être dans une période où l’essentiel prend toute la place. Et c’est OK."
+        : ratioLoisirs < 0.25
+        ? "Tu sembles trouver un certain équilibre. Pas parfait, mais fonctionnel."
+        : "Tu arrives peut-être à t’accorder des petits moments pour toi. C’est une force quand c’est possible.";
+
+    const ratioEpargne = seuilPrecaution ? epargneActNum / seuilPrecaution : 0;
+    const bloc3 =
+      ratioEpargne < 0.5
+        ? "Ton épargne actuelle ne couvre pas encore les imprévus. Mais ça ne veut pas dire que tu fais mal. Ça veut dire que la vie est parfois plus rapide que l’épargne."
+        : ratioEpargne < 0.9
+        ? "Tu avances vers un peu plus de sécurité. Ce que tu construis compte."
+        : "Tu as peut-être une petite base de sécurité. Et ça change tout dans les moments difficiles.";
+
+    setBlocks([bloc1, bloc2, bloc3]);
+
+    setSummary(
+      "Ce que tu viens de saisir n’est pas qu’un calcul. C’est un aperçu de ta réalité.\nCe bilan n’est pas là pour te dire comment vivre, mais pour mettre des mots sur ce que tu traverses.\nSi tu veux recevoir ce retour par mail, ou en parler gratuitement 30 minutes, c’est possible, à ton rythme."
+    );
+  };
+
+  const handleSendEmail = async () => {
+    const revenuNum = parseFloat(revenus) || 0;
+    const besoinsNum = parseFloat(besoins) || 0;
+    const loisirsNum = parseFloat(loisirs) || 0;
+    const epargneNum = parseFloat(epargneMensuelle) || 0;
+    const epargneActNum = parseFloat(epargneActuelle) || 0;
+
+    const totalDepenses = besoinsNum + loisirsNum;
+    const reste = revenuNum - totalDepenses;
+    const seuilPrecaution = totalDepenses * 3;
+
+    const blocText = blocks.join("\n");
+    const resume = `${blocText}\n${summary ?? ''}`;
+
+    await addDoc(collection(db, "diagnostics"), {
+      prenom,
+      nom,
+      email,
+      consent,
+      revenus: revenuNum,
+      besoins: besoinsNum,
+      loisirs: loisirsNum,
+      epargneMensuelle: epargneNum,
+      epargneActuelle: epargneActNum,
+      totalDepenses,
+      reste,
+      seuilPrecaution,
+      resume,
+      mailRequested: true,
+      createdAt: serverTimestamp(),
+    });
+
+    setEmailSent(true);
   };
 
   return (
@@ -46,28 +129,56 @@ export default function Home() {
       <Header />
       <main className="flex-1 animate-fade-in px-4 sm:px-6">
         <Hero />
+        {step === "info" && (
+          <form className="formApple max-w-3xl mx-auto" onSubmit={handleInfoSubmit}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <input type="text" value={prenom} onChange={e => setPrenom(e.target.value)} placeholder="Prénom" required className="border border-gray-300 rounded-lg p-2" />
+              <input type="text" value={nom} onChange={e => setNom(e.target.value)} placeholder="Nom" required className="border border-gray-300 rounded-lg p-2" />
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" required className="sm:col-span-2 border border-gray-300 rounded-lg p-2" />
+              <label className="flex items-center space-x-2 sm:col-span-2 text-sm">
+                <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} required />
+                <span>J’accepte la collecte de mes données</span>
+              </label>
+            </div>
+            <button type="submit" className="w-full bg-[#187072] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-6 flex items-center justify-center gap-2">
+              <CheckCircleIcon className="w-5 h-5 text-white" />
+              Commencer
+            </button>
+          </form>
+        )}
 
-        <form className="formApple max-w-3xl mx-auto" onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <InputWithInfo label="Revenus mensuels" value={revenus} onChange={e => setRevenus(e.target.value)} info={infos.revenus} name="revenus" />
-            <InputWithInfo label="Dépenses essentielles" value={besoins} onChange={e => setBesoins(e.target.value)} info={infos.besoins} name="besoins" />
-            <InputWithInfo label="Loisirs" value={loisirs} onChange={e => setLoisirs(e.target.value)} info={infos.loisirs} name="loisirs" />
-            <InputWithInfo label="Épargne mensuelle" value={epargneMensuelle} onChange={e => setEpargneMensuelle(e.target.value)} info={infos.epargneMensuelle} name="epargneMensuelle" />
-            <InputWithInfo label="Épargne actuelle" value={epargneActuelle} onChange={e => setEpargneActuelle(e.target.value)} info={infos.epargneActuelle} name="epargneActuelle" />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-[#187072] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-6 flex items-center justify-center gap-2"
-          >
-            <CheckCircleIcon className="w-5 h-5 text-white" />
-            Obtenir mon diagnostic
-          </button>
-        </form>
-
-        {resultMessage && (
-          <div className="resultMessage max-w-2xl mx-auto mt-6 text-center bg-[#e8f3fa] text-[#187072] font-medium p-4 rounded shadow animate-fade-in">
-            {resultMessage}
-          </div>
+        {step === "budget" && (
+          <>
+            <form className="formApple max-w-3xl mx-auto" onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <InputWithInfo label="Revenus nets mensuels" value={revenus} onChange={e => setRevenus(e.target.value)} info={infos.revenus} name="revenus" />
+                <InputWithInfo label="Dépenses besoins" value={besoins} onChange={e => setBesoins(e.target.value)} info={infos.besoins} name="besoins" />
+                <InputWithInfo label="Dépenses loisirs" value={loisirs} onChange={e => setLoisirs(e.target.value)} info={infos.loisirs} name="loisirs" />
+                <InputWithInfo label="Épargne mensuelle" value={epargneMensuelle} onChange={e => setEpargneMensuelle(e.target.value)} info={infos.epargneMensuelle} name="epargneMensuelle" />
+                <InputWithInfo label="Épargne disponible" value={epargneActuelle} onChange={e => setEpargneActuelle(e.target.value)} info={infos.epargneActuelle} name="epargneActuelle" />
+              </div>
+              <button type="submit" className="w-full bg-[#187072] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-6 flex items-center justify-center gap-2">
+                <CheckCircleIcon className="w-5 h-5 text-white" />
+                Obtenir mon diagnostic
+              </button>
+            </form>
+            {blocks.length > 0 && (
+              <div className="resultMessage max-w-2xl mx-auto mt-6 text-center space-y-4 bg-[#e8f3fa] text-[#187072] font-medium p-4 rounded shadow animate-fade-in">
+                {blocks.map((b, i) => (
+                  <p key={i}>{b}</p>
+                ))}
+                {summary && <p className="mt-2 font-normal">{summary}</p>}
+              </div>
+            )}
+            {blocks.length > 0 && !emailSent && (
+              <button onClick={handleSendEmail} className="w-full max-w-2xl mx-auto bg-[#26436E] text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 mt-6 block">
+                Recevoir mon mini bilan par mail
+              </button>
+            )}
+            {emailSent && (
+              <p className="text-center text-[#187072] font-medium mt-4">Email envoyé !</p>
+            )}
+          </>
         )}
       </main>
       <Footer />
