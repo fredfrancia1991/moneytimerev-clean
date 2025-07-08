@@ -26,7 +26,7 @@ export default function Dashboard() {
         router.replace("/login");
         return;
       }
-      setUser(u);
+      
       const isAdmin = u.email === "frederic.francia@icloud.com";
       setAdmin(isAdmin);
 
