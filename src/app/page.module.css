@@ -1,0 +1,26 @@
+/* src/app/page.module.css */
+
+.resultCard {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-top: 2rem;
+  }
+  
+  .loaderContainer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.1rem;
+  }
+  
+  .coachingSuggestion {
+    margin-top: 1rem;
+    font-style: italic;
+    color: #666;
+  }
+  
+  .comparative {
+    margin-top: 0.5rem;
+    color: #444;
+  }
