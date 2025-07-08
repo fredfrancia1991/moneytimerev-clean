@@ -1,7 +1,7 @@
 import { getApps, initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
-import { firebaseConfig } from '../../lib/firebase'
+import { firebaseConfig } from './firebaseConfig'
 
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig)
 
