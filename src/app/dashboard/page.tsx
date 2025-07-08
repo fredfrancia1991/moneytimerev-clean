@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "../lib/firebase";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
-import { collection, query, where, orderBy, getDocs, DocumentData } from "firebase/firestore";
+import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -16,7 +16,6 @@ interface Diagnostic {
 }
 
 export default function Dashboard() {
-  const [user, setUser] = useState<User | null>(null);
   const [admin, setAdmin] = useState(false);
   const [diagnostics, setDiagnostics] = useState<Diagnostic[]>([]);
   const router = useRouter();
