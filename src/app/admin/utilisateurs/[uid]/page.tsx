@@ -1,13 +1,11 @@
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
 
-type AdminUserDetailProps = {
-  params: {
-    uid: string
-  }
+type Props = {
+  params: { uid: string }
 }
 
-export default function AdminUserDetail({ params }: AdminUserDetailProps) {
+export default function AdminUserDetail({ params }: Props) {
   return (
     <>
       <Header />
