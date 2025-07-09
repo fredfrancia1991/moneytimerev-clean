@@ -1,10 +1,11 @@
 "use client"
 export const dynamic = "force-dynamic"
 
+import type { PageProps } from 'next'
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
 
-export default function AdminUserDetail({ params }: { params: { uid: string } }) {
+export default function AdminUserDetail({ params }: PageProps<{ uid: string }>) {
   return (
     <>
       <Header />
