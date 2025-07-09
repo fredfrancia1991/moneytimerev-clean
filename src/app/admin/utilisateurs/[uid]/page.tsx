@@ -1,21 +1,22 @@
-import Header from '../../../components/Header'
-import Footer from '../../../components/Footer'
+// src/app/admin/utilisateurs/[uid]/page.tsx
 
-type Props = {
-  params: { uid: string }
+import { FC } from "react"
+
+type PageProps = {
+  params: {
+    uid: string
+  }
 }
 
-export default function AdminUserDetail({ params }: Props) {
+const AdminUserDetailPage: FC<PageProps> = ({ params }) => {
+  const { uid } = params
+
   return (
-    <>
-      <Header />
-      <main className="max-w-3xl mx-auto p-4 mt-6">
-        <h1 className="text-2xl font-bold text-[#26436E] mb-4">
-          Fiche utilisateur : {params.uid}
-        </h1>
-        <p>Détails du client à venir...</p>
-      </main>
-      <Footer />
-    </>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Fiche utilisateur : {uid}</h1>
+      {/* Contenu à venir */}
+    </div>
   )
 }
+
+export default AdminUserDetailPage
