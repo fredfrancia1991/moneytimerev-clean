@@ -1,10 +1,8 @@
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
 
-type Props = {
-  params: {
-    uid: string
-  }
+tinterface AdminUserDetailProps {
+    params: { uid: string };
 }
 
 export default function AdminUserDetail({ params }: Props) {
