@@ -23,10 +23,16 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await signInWithEmailAndPassword(auth, email, password);
-    router.replace("/client");
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      console.log("Connexion réussie :", result.user);
+      router.replace("/client");
+    } catch (err: any) {
+      console.error("Erreur de connexion :", err.message);
+      alert("Connexion impossible : " + err.message);
+    }
   };
-
+  
   return (
     <>
       <Header />
