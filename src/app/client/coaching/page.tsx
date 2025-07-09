@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
 import { db } from '../../lib/firebase';
 import { collection, doc, getDoc } from "firebase/firestore";
-import { useAuth } from '../../lib/useAuth'; // ✅ chemin relatif correct
+import { useAuth } from '../../../../lib/useAuth';
 export default function ClientCoaching() {
   const { user } = useAuth();
   const [coaching, setCoaching] = useState<any>(null);
