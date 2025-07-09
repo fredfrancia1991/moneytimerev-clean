@@ -2,10 +2,11 @@
   "name": "functions",
   "version": "1.0.0",
   "main": "lib/index.js",
-  "scripts": {
-    "build": "tsc",
-    "deploy": "npm run build && firebase deploy --only functions"
-  },
+"scripts": {
+  "build": "tsc",
+  "lint": "eslint . --ext .ts",
+  "deploy": "npm run build && firebase deploy --only functions"
+}
   "engines": {
     "node": "18"
   },
