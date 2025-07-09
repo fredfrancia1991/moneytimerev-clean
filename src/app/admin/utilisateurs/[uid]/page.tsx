@@ -1,8 +1,7 @@
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
 
-type AdminUserDetailProps {
-    params: { uid: string };
+type AdminUserDetailProps { params: { uid: string };
 }
 
 export default function AdminUserDetail({ params }: Props) {
