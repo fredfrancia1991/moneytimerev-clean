@@ -1,14 +1,14 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../lib/firebase";
+import { onAuthStateChanged } from "../lib/localAuth";
 
 export default function Header() {
   const [connected, setConnected] = useState(false);
+  const showLinks = process.env.NEXT_PUBLIC_ENV !== 'prod';
 
   useEffect(() => {
-    return onAuthStateChanged(auth, user => setConnected(!!user));
+    return onAuthStateChanged(user => setConnected(!!user));
   }, []);
 
   return (
@@ -17,16 +17,18 @@ export default function Header() {
         <span className="text-xl font-extrabold text-[#26436E]">
           MoneyTime <span className="italic text-[#187072]">Rev’</span>
         </span>
-        <nav className="space-x-4 text-sm font-semibold text-[#187072]">
-          <Link href="/" className="hover:underline">Accueil</Link>
-          <Link href="/" className="hover:underline">Diagnostic</Link>
-          <Link href="/contact" className="hover:underline">Contact</Link>
-          {connected ? (
-            <Link href="/client" className="hover:underline">Mon espace</Link>
-          ) : (
-            <Link href="/login" className="hover:underline">Connexion</Link>
-          )}
-        </nav>
+        {showLinks && (
+          <nav className="space-x-4 text-sm font-semibold text-[#187072]">
+            <Link href="/" className="hover:underline">Accueil</Link>
+            <Link href="/" className="hover:underline">Diagnostic</Link>
+            <Link href="/contact" className="hover:underline">Contact</Link>
+            {connected ? (
+              <Link href="/client" className="hover:underline">Mon espace</Link>
+            ) : (
+              <Link href="/login" className="hover:underline">Connexion</Link>
+            )}
+          </nav>
+        )}
       </div>
     </header>
   );

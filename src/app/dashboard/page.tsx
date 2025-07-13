@@ -5,19 +5,11 @@ export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { auth, db } from "../lib/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
+import { onAuthStateChanged, signOut } from "../lib/localAuth";
+import { getDiagnostics, Diagnostic } from "../lib/localDb";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-interface Diagnostic {
-  id: string;
-  prenom?: string;
-  nom?: string;
-  email?: string;
-  createdAt?: { seconds: number };
-}
 
 export default function Dashboard() {
   const [admin, setAdmin] = useState(false);
@@ -25,7 +17,7 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    return onAuthStateChanged(auth, async (u) => {
+    return onAuthStateChanged((u) => {
       if (!u) {
         router.replace("/login");
         return;
@@ -34,25 +26,13 @@ export default function Dashboard() {
       const isAdmin = u.email === "frederic.francia@icloud.com";
       setAdmin(isAdmin);
 
-      const baseQuery = isAdmin
-        ? query(collection(db, "diagnostics"), orderBy("createdAt", "desc"))
-        : query(
-            collection(db, "diagnostics"),
-            where("email", "==", u.email),
-            orderBy("createdAt", "desc")
-          );
-
-      const snap = await getDocs(baseQuery);
-      const data = snap.docs.map((d) => ({
-        id: d.id,
-        ...d.data(),
-      })) as Diagnostic[];
+      const data = isAdmin ? getDiagnostics() : getDiagnostics(u.email ?? undefined);
       setDiagnostics(data);
     });
   }, [router]);
 
   const logout = async () => {
-    await signOut(auth);
+    await signOut();
     router.replace("/");
   };
 

@@ -4,8 +4,7 @@ export const dynamic = "force-dynamic";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useState } from "react";
-import { db } from "./lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { saveDiagnostic } from "./lib/localDb";
 
 export default function Home() {
   const [prenom, setPrenom] = useState("");
@@ -36,13 +35,7 @@ export default function Home() {
     setAnalysis(message);
 
     try {
-      await addDoc(collection(db, "diagnosticsSimple"), {
-        prenom,
-        nom,
-        email,
-        message,
-        createdAt: serverTimestamp(),
-      });
+      saveDiagnostic({ prenom, nom, email, message });
     } catch (err) {
       console.error("Could not save diagnostic", err);
     }
