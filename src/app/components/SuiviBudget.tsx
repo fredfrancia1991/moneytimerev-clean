@@ -1,202 +1,108 @@
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Pie } from "react-chartjs-2";
+  Mouvement,
+  Groupe,
+  groupes,
+} from "./types";
+import FormulaireBudget from "./FormulaireBudget";
+import TableauMouvements from "./TableauMouvements";
+import ModalEdition from "./ModalEdition";
+import RepartitionBudget from "./RepartitionBudget";
+import EvolutionMensuelle from "./EvolutionMensuelle";
+import ResumeBudget from "./ResumeBudget";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
-
-interface Mouvement {
-  id: number;
-  nom: string;
-  montant: number;
-  groupe: Groupe;
-  mois: string; // YYYY-MM
-}
-
-type Groupe =
-  | "Revenus"
-  | "Besoins pour vivre"
-  | "Plaisirs et loisirs"
-  | "Liberté financière"
-  | "Ignoré";
-
-const groupes: Groupe[] = [
-  "Revenus",
-  "Besoins pour vivre",
-  "Plaisirs et loisirs",
-  "Liberté financière",
-  "Ignoré",
-];
+const STORAGE_KEY = "mouvements";
 
 export default function SuiviBudget() {
   const moisActuel = new Date().toISOString().slice(0, 7);
-  const [selectedMonth, setSelectedMonth] = useState<string>(moisActuel);
   const [mouvements, setMouvements] = useState<Mouvement[]>([]);
-  const [nom, setNom] = useState("");
-  const [montant, setMontant] = useState("0");
-  const [groupe, setGroupe] = useState<Groupe>("Revenus");
+  const [mois, setMois] = useState(moisActuel);
+  const [filtre, setFiltre] = useState<Groupe | "Tous">("Tous");
+  const [editing, setEditing] = useState<Mouvement | null>(null);
 
-  const ajouterMouvement = (e: React.FormEvent) => {
-    e.preventDefault();
-    const value = parseFloat(montant);
-    if (!nom || isNaN(value) || value <= 0) return;
+  useEffect(() => {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        setMouvements(JSON.parse(raw));
+      } catch {
+        // ignore
+      }
+    }
+  }, []);
 
-    const nouveau: Mouvement = {
-      id: Date.now(),
-      nom,
-      montant: value,
-      groupe,
-      mois: moisActuel,
-    };
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(mouvements));
+  }, [mouvements]);
 
-    setMouvements((prev) => [...prev, nouveau]);
-    setNom("");
-    setMontant("0");
-    setGroupe("Revenus");
+  const ajouter = (data: Omit<Mouvement, "id" | "mois">) => {
+    const nouveau: Mouvement = { id: Date.now(), mois: moisActuel, ...data };
+    setMouvements(m => [...m, nouveau]);
   };
 
-  const mouvementsFiltrés = mouvements.filter((m) => m.mois === selectedMonth);
-  const somme = (g: Groupe) =>
-    mouvementsFiltrés
-      .filter((m) => m.groupe === g)
-      .reduce((sum, m) => sum + m.montant, 0);
-
-  const revenu = somme("Revenus");
-  const besoins = somme("Besoins pour vivre");
-  const loisirs = somme("Plaisirs et loisirs");
-  const liberte = somme("Liberté financière");
-  const depenses = besoins + loisirs + liberte;
-  const solde = revenu - depenses;
-
-  const data = {
-    labels: ["Besoins", "Loisirs", "Liberté"],
-    datasets: [
-      {
-        data: [besoins, loisirs, liberte],
-        backgroundColor: ["#187072", "#26436E", "#E8F3FA"],
-        borderWidth: 1,
-      },
-    ],
+  const mettreAJour = (id: number, data: Omit<Mouvement, "id" | "mois">) => {
+    setMouvements(m => m.map(item => (item.id === id ? { ...item, ...data } : item)));
   };
+
+  const supprimer = (id: number) => {
+    setMouvements(m => m.filter(item => item.id !== id));
+  };
+
+  const mouvementsFiltrés = mouvements.filter(
+    m =>
+      m.mois === mois && (filtre === "Tous" || m.groupe === filtre)
+  );
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-2 gap-4 text-center">
-        <div className="bg-white p-4 rounded shadow">
-          <p className="text-sm text-gray-500">Revenu</p>
-          <p className="text-xl font-bold text-[#187072]">
-            {revenu.toFixed(2)} €
-          </p>
-        </div>
-        <div className="bg-white p-4 rounded shadow">
-          <p className="text-sm text-gray-500">Solde</p>
-          <p className="text-xl font-bold text-[#187072]">
-            {solde.toFixed(2)} €
-          </p>
-        </div>
-      </div>
+      <ResumeBudget mouvements={mouvementsFiltrés} />
 
-      <div className="grid grid-cols-3 gap-4 text-center">
-        <div className="bg-white p-4 rounded shadow">
-          <p className="text-sm text-gray-500">Besoins pour vivre</p>
-          <p className="text-lg font-semibold text-[#26436E]">
-            {besoins.toFixed(2)} €
-          </p>
-        </div>
-        <div className="bg-white p-4 rounded shadow">
-          <p className="text-sm text-gray-500">Plaisirs et loisirs</p>
-          <p className="text-lg font-semibold text-[#26436E]">
-            {loisirs.toFixed(2)} €
-          </p>
-        </div>
-        <div className="bg-white p-4 rounded shadow">
-          <p className="text-sm text-gray-500">Liberté financière</p>
-          <p className="text-lg font-semibold text-[#26436E]">
-            {liberte.toFixed(2)} €
-          </p>
-        </div>
-      </div>
-
-      <div className="max-w-sm mx-auto">
-        <Pie data={data} />
-      </div>
-
-      <div className="flex justify-center">
+      <div className="flex flex-wrap gap-4 justify-center">
         <input
           type="month"
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
+          value={mois}
+          onChange={e => setMois(e.target.value)}
           className="border rounded p-2"
         />
+        <select
+          value={filtre}
+          onChange={e => setFiltre(e.target.value as Groupe | "Tous")}
+          className="border rounded p-2"
+        >
+          <option value="Tous">Toutes catégories</option>
+          {groupes.map(g => (
+            <option key={g} value={g}>
+              {g}
+            </option>
+          ))}
+        </select>
       </div>
 
-      <form onSubmit={ajouterMouvement} className="space-y-4">
-        <div className="flex flex-col">
-          <label className="font-medium">Nom</label>
-          <input
-            type="text"
-            value={nom}
-            onChange={(e) => setNom(e.target.value)}
-            className="border rounded p-2"
-            required
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="font-medium">Montant</label>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={montant}
-            onChange={(e) => setMontant(e.target.value)}
-            className="border rounded p-2"
-            required
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="font-medium">Groupe</label>
-          <select
-            value={groupe}
-            onChange={(e) => setGroupe(e.target.value as Groupe)}
-            className="border rounded p-2"
-          >
-            {groupes.map((g) => (
-              <option key={g} value={g}>
-                {g}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button type="submit" className="bg-[#187072] text-white py-2 px-4 rounded">
-          Ajouter
-        </button>
-      </form>
+      <FormulaireBudget onSubmit={ajouter} />
 
-      <table className="w-full text-sm mt-8">
-        <thead>
-          <tr className="border-b">
-            <th className="text-left p-2">Nom</th>
-            <th className="text-right p-2">Montant</th>
-            <th className="text-left p-2">Groupe</th>
-          </tr>
-        </thead>
-        <tbody>
-          {mouvementsFiltrés.map((m) => (
-            <tr key={m.id} className="border-b hover:bg-gray-50">
-              <td className="p-2">{m.nom}</td>
-              <td className="p-2 text-right">{m.montant.toFixed(2)} €</td>
-              <td className="p-2">{m.groupe}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <TableauMouvements
+        mouvements={mouvementsFiltrés}
+        onEdit={m => setEditing(m)}
+        onDelete={supprimer}
+      />
+
+      <RepartitionBudget mouvements={mouvementsFiltrés} />
+
+      <EvolutionMensuelle mouvements={mouvements} />
+
+      <ModalEdition open={!!editing} onClose={() => setEditing(null)}>
+        {editing && (
+          <FormulaireBudget
+            initial={editing}
+            onSubmit={data => {
+              mettreAJour(editing.id, data);
+              setEditing(null);
+            }}
+            onCancel={() => setEditing(null)}
+          />
+        )}
+      </ModalEdition>
     </div>
   );
 }
-
