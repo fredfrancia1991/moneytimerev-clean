@@ -5,8 +5,7 @@ export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { auth } from "../lib/firebase";
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { signIn, onAuthStateChanged } from "../lib/localAuth";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -16,7 +15,7 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-    return onAuthStateChanged(auth, (user) => {
+    return onAuthStateChanged((user) => {
       if (user) router.replace("/client");
     });
   }, [router]);
@@ -24,8 +23,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      console.log("Connexion réussie :", result.user);
+      await signIn(email, password);
       router.replace("/client");
     } catch (err: any) {
       console.error("Erreur de connexion :", err.message);

@@ -2,8 +2,7 @@
 export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
-import { db } from '../../lib/firebase';
-import { collection, doc, getDoc } from "firebase/firestore";
+import { getCoaching } from '../../../lib/localDb';
 import { useAuth } from '../../../lib/useAuth';
 export default function ClientCoaching() {
   const { user } = useAuth();
@@ -11,16 +10,7 @@ export default function ClientCoaching() {
 
   useEffect(() => {
     if (!user) return;
-    const fetchCoaching = async () => {
-      const docRef = doc(db, "coaching", user.uid);
-      const snap = await getDoc(docRef);
-      if (snap.exists()) {
-        setCoaching(snap.data());
-      } else {
-        setCoaching(null);
-      }
-    };
-    fetchCoaching();
+    setCoaching(getCoaching(user.uid));
   }, [user]);
 
   if (!user) return <p className="text-center">Chargement…</p>;

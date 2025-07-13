@@ -2,15 +2,18 @@
 import Link from "next/link";
 
 export default function Footer() {
+  const showLinks = process.env.NEXT_PUBLIC_ENV !== 'prod';
   return (
     <footer className="bg-[#f8f9fa] text-[#4a4a4a] text-sm mt-12 border-t border-gray-200">
       <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="space-y-2">
-          <Link href="/cgu" className="block hover:underline">CGU</Link>
-          <Link href="/mentions-legales" className="block hover:underline">Mentions légales</Link>
-          <Link href="/politique-de-confidentialite" className="block hover:underline">Politique de confidentialité</Link>
-          <Link href="/contact" className="block hover:underline">Contact</Link>
-        </div>
+        {showLinks && (
+          <div className="space-y-2">
+            <Link href="/cgu" className="block hover:underline">CGU</Link>
+            <Link href="/mentions-legales" className="block hover:underline">Mentions légales</Link>
+            <Link href="/politique-de-confidentialite" className="block hover:underline">Politique de confidentialité</Link>
+            <Link href="/contact" className="block hover:underline">Contact</Link>
+          </div>
+        )}
         <div className="space-y-2 text-xs">
           <p>Éditeur : MoneyTime Rev’</p>
           <p>Hébergeur : Google Cloud Platform</p>
