@@ -1,0 +1,22 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/send-data/route": "app/api/send-data/route.js",
+  "/api/update-plan/route": "app/api/update-plan/route.js",
+  "/api/verify-session/route": "app/api/verify-session/route.js",
+  "/admin/diagnostics/page": "app/admin/diagnostics/page.js",
+  "/cgu/page": "app/cgu/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/utilisateurs/page": "app/admin/utilisateurs/page.js",
+  "/mentions-legales/page": "app/mentions-legales/page.js",
+  "/contact/page": "app/contact/page.js",
+  "/login/page": "app/login/page.js",
+  "/politique-de-confidentialite/page": "app/politique-de-confidentialite/page.js",
+  "/page": "app/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/offres/page": "app/offres/page.js",
+  "/client/page": "app/client/page.js",
+  "/client/dashboard/page": "app/client/dashboard/page.js",
+  "/client/profil/page": "app/client/profil/page.js",
+  "/client/coaching/page": "app/client/coaching/page.js",
+  "/client/rendez-vous/page": "app/client/rendez-vous/page.js"
+}

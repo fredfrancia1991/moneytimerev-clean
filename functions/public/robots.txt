@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://moneytimerev-e2351.web.app/sitemap.xml

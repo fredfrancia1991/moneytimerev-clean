@@ -32,36 +32,17 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendContactEmail = void 0;
+exports.nextApp = void 0;
 const functions = __importStar(require("firebase-functions"));
-const nodemailer = __importStar(require("nodemailer"));
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: functions.config().gmail.login,
-        pass: functions.config().gmail.pass
-    }
+const next_1 = __importDefault(require("next"));
+const isDev = process.env.NODE_ENV !== "production";
+const app = (0, next_1.default)({ dev: isDev, conf: { distDir: ".next" } });
+const handle = app.getRequestHandler();
+exports.nextApp = functions.https.onRequest(async (req, res) => {
+    await app.prepare();
+    handle(req, res);
 });
-exports.sendContactEmail = functions.firestore
-    .document('contacts/{contactId}')
-    .onCreate(async (snap, context) => {
-    const data = snap.data();
-    const nom = data.nom || 'Inconnu';
-    const email = data.email || 'non-renseigné';
-    const message = data.message || '...';
-    const mailOptions = {
-        from: `"MoneyTime Rev’" <${functions.config().gmail.login}>`,
-        to: 'tonadresseperso@gmail.com',
-        subject: `📬 Nouveau message de ${nom}`,
-        html: `<p><strong>Email :</strong> ${email}</p><p>${message}</p>`
-    };
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log('✅ Mail envoyé');
-    }
-    catch (error) {
-        console.error('❌ Erreur e-mail', error);
-    }
-});
-//# sourceMappingURL=index.js.map

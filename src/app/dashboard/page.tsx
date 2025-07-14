@@ -64,7 +64,7 @@ export default function Dashboard() {
                 <p className="font-semibold">
                   Diagnostic du{" "}
                   {d.createdAt
-                    ? new Date(d.createdAt.seconds * 1000).toLocaleDateString()
+                    ? new Date(d.createdAt * 1000).toLocaleDateString()
                     : "Date inconnue"}
                 </p>
               </div>

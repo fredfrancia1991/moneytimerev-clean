@@ -7,15 +7,17 @@
     "generate-sitemap": "node scripts/generate-sitemap.js",
     "build": "npm run generate-sitemap && next build --no-lint",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "export": "next export"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "chart.js": "^4.4.1",
+    "firebase-functions": "^6.3.2",
     "next": "^15.3.5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "chart.js": "^4.4.1",
-    "react-chartjs-2": "^5.2.0"
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

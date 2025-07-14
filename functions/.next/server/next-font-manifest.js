@@ -1,0 +1,1 @@
+self.__NEXT_FONT_MANIFEST='{"pages":{},"app":{"/Users/fredericfrancia/Desktop/moneytimerev-site/moneytimerev/moneytimerev-clean/src/app/layout":["static/media/40d40f0f334d7ad1-s.p.woff2"]},"appUsingSizeAdjust":true,"pagesUsingSizeAdjust":false}';
