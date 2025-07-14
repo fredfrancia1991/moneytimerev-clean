@@ -1,126 +1,76 @@
 "use client";
-export const dynamic = "force-dynamic";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { useState } from "react";
-import { saveDiagnostic } from "./lib/localDb";
 
-export default function Home() {
-  const [prenom, setPrenom] = useState("");
-  const [nom, setNom] = useState("");
-  const [email, setEmail] = useState("");
-
-  const [submitted, setSubmitted] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
-  const [analysis, setAnalysis] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (submitted) {
-      setSubmitted(false);
-      setEmailSent(false);
-      setPrenom("");
-      setNom("");
-      setEmail("");
-      setAnalysis("");
-      return;
-    }
-
-    const message =
-      `Merci ${prenom || ""} ! Voici une piste pour mieux gérer ton budget : ` +
-      "prends quelques minutes chaque semaine pour suivre tes dépenses.";
-
-    setAnalysis(message);
-
-    try {
-      saveDiagnostic({ prenom, nom, email, message });
-    } catch (err) {
-      console.error("Could not save diagnostic", err);
-    }
-
-    setSubmitted(true);
-  };
-
-  const handleSendEmail = () => {
-    setEmailSent(true);
-  };
-
+export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F6FA] text-[#26436E] font-sans">
+    <main className="min-h-screen flex flex-col bg-[#F5F6FA] text-[#363945]">
       <Header />
-      <main className="flex-1 px-4 py-8">
-        <section className="max-w-3xl mx-auto text-center space-y-4 mb-8">
-          <h1 className="text-3xl font-extrabold">
-            Prenez votre avenir financier en main
+
+      <div className="flex-1 py-24 px-6 max-w-3xl mx-auto space-y-24 text-center">
+        {/* Section 1 : Accroche */}
+        <section className="space-y-6">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#26436E]">
+            Vous ne savez plus où passe votre argent ?
           </h1>
-          <p className="text-lg">
-            Commencez avec un diagnostic gratuit pour découvrir nos conseils personnalisés.
+          <p className="text-lg text-gray-700">
+            Vous n’êtes pas seul. MoneyTime Rev’ vous aide à y voir clair,<br />
+            pas à pas, sans jugement, avec des repères simples et utiles.
           </p>
         </section>
 
-        <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto bg-white p-6 rounded-xl shadow">
-          <div>
-            <label htmlFor="prenom" className="font-semibold">Prénom</label>
+        {/* Section 2 : Inscription */}
+        <section className="space-y-4">
+          <h2 className="text-2xl font-semibold text-[#26436E]">
+            Soyez informé dès le lancement
+          </h2>
+          <p className="text-gray-600">
+            MoneyTime Rev’ est en cours de finalisation. Laissez-nous votre e-mail pour être informé à l’ouverture.
+          </p>
+          <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
             <input
-              id="prenom"
-              type="text"
-              value={prenom}
-              onChange={(e) => setPrenom(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-2"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="nom" className="font-semibold">Nom</label>
-            <input
-              id="nom"
-              type="text"
-              value={nom}
-              onChange={(e) => setNom(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-2"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="font-semibold">E-mail</label>
-            <input
-              id="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-2"
-              required
+              placeholder="Votre adresse e-mail"
+              className="flex-1 p-3 border border-gray-300 rounded"
+              disabled
             />
-          </div>
-          <button type="submit" className="w-full bg-[#187072] text-white font-bold py-3 rounded-xl">
-            {submitted ? "Refaire le diagnostic" : "Lancer le diagnostic gratuit"}
-          </button>
-        </form>
+            <button
+              className="bg-[#187072] text-white px-6 py-3 rounded font-semibold cursor-not-allowed"
+              disabled
+            >
+              Être prévenu du lancement
+            </button>
+          </form>
+          <p className="text-xs text-center text-gray-400">
+            (Formulaire inactif pour le moment – lancement prévu prochainement)
+          </p>
+        </section>
 
-        {submitted && (
-          <div className="max-w-md mx-auto bg-white p-6 rounded-xl shadow mt-8 space-y-4 text-[#363945]">
-            <p>{analysis}</p>
-            <p className="italic text-[#187072]">
-              Ce diagnostic est fictif et sert d'exemple avant l'intégration complète.
-            </p>
-            {!emailSent ? (
-              <button
-                onClick={handleSendEmail}
-                className="w-full bg-[#26436E] text-white font-bold py-3 rounded-xl"
-              >
-                Recevoir ce bilan par mail et réserver un rendez-vous de 30 min
-              </button>
-            ) : (
-              <p className="text-center text-[#187072] font-medium">
-                Vous recevrez bientôt un email avec les détails.
-              </p>
-            )}
-          </div>
-        )}
-      </main>
+        {/* Section 3 : Comment ça se passe ? */}
+        <section className="space-y-6 text-left">
+          <h2 className="text-2xl font-semibold text-center text-[#26436E]">
+            Concrètement, comment ça se passe ?
+          </h2>
+          <p className="text-gray-700">
+            Vous ne recevrez pas un simple PDF ni un simulateur compliqué.
+          </p>
+          <p className="text-gray-700">
+            Tout commence par un diagnostic clair, pour comprendre votre situation actuelle.
+          </p>
+          <p className="text-gray-700">
+            Nous vous aidons ensuite à analyser vos dépenses, vos équilibres et vos marges de manœuvre.
+          </p>
+          <p className="text-gray-700">
+            Vous identifiez ce qui vous pèse, ce que vous pouvez ajuster, et ce qui fonctionne déjà bien.
+          </p>
+          <p className="text-gray-700">
+            Et surtout, vous avancez à votre rythme, avec un accompagnement solide et humain, si vous souhaitez aller plus loin.
+          </p>
+        </section>
+      </div>
+
       <Footer />
-    </div>
+    </main>
   );
 }

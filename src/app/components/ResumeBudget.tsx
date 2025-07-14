@@ -1,31 +1,42 @@
 "use client";
-import { Mouvement, Groupe } from "./types";
 
-export default function ResumeBudget({
-  mouvements,
-}: {
-  mouvements: Mouvement[];
-}) {
-  const somme = (g: Groupe) =>
-    mouvements
-      .filter(m => m.groupe === g)
-      .reduce((sum, m) => sum + m.montant, 0);
+type Props = {
+  revenu: number;
+  solde: number;
+};
 
-  const revenu = somme("Revenus");
-  const depenses = mouvements
-    .filter(m => m.groupe !== "Revenus" && m.groupe !== "Ignoré")
-    .reduce((sum, m) => sum + m.montant, 0);
-  const solde = revenu - depenses;
-
+export default function ResumeBudget({ revenu, solde }: Props) {
   return (
     <div className="grid grid-cols-2 gap-4 text-center">
       <div className="bg-white p-4 rounded shadow">
-        <p className="text-sm text-gray-500">Revenu</p>
+        <p className="text-sm text-gray-500 flex items-center justify-center gap-1">
+          Revenu
+          <span
+            title="Total des entrées (ex. : salaires, aides) enregistrées ce mois-ci"
+            className="cursor-help text-xs text-gray-400"
+          >
+            ℹ️
+          </span>
+        </p>
         <p className="text-xl font-bold text-[#187072]">{revenu.toFixed(2)} €</p>
       </div>
       <div className="bg-white p-4 rounded shadow">
-        <p className="text-sm text-gray-500">Solde</p>
-        <p className="text-xl font-bold text-[#187072]">{solde.toFixed(2)} €</p>
+        <p className="text-sm text-gray-500 flex items-center justify-center gap-1">
+          Solde
+          <span
+            title="Différence entre vos revenus et vos dépenses pour le mois"
+            className="cursor-help text-xs text-gray-400"
+          >
+            ℹ️
+          </span>
+        </p>
+        <p
+          className={`text-xl font-bold ${
+            solde >= 0 ? "text-[#187072]" : "text-red-600"
+          }`}
+        >
+          {solde.toFixed(2)} €
+        </p>
       </div>
     </div>
   );

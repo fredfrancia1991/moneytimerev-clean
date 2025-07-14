@@ -1,82 +1,80 @@
 "use client";
-import { useState } from "react";
-import { Mouvement, Groupe, groupes } from "./types";
 
-interface Props {
-  initial?: Mouvement;
-  onSubmit: (data: Omit<Mouvement, "id" | "mois">) => void;
-  onCancel?: () => void;
-}
+import { Groupe } from "./types";
 
-export default function FormulaireBudget({ initial, onSubmit, onCancel }: Props) {
-  const [nom, setNom] = useState(initial?.nom || "");
-  const [montant, setMontant] = useState(initial ? String(initial.montant) : "0");
-  const [groupe, setGroupe] = useState<Groupe>(initial?.groupe || "Revenus");
+type Props = {
+  nom: string;
+  montant: string;
+  groupe: Groupe;
+  onChangeNom: (val: string) => void;
+  onChangeMontant: (val: string) => void;
+  onChangeGroupe: (val: Groupe) => void;
+  onSubmit: () => void;
+  label?: string;
+};
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const value = parseFloat(montant);
-    if (!nom || isNaN(value) || value <= 0) return;
-    onSubmit({ nom, montant: value, groupe });
-    if (!initial) {
-      setNom("");
-      setMontant("0");
-      setGroupe("Revenus");
-    }
-  };
-
+export default function FormulaireBudget({
+  nom,
+  montant,
+  groupe,
+  onChangeNom,
+  onChangeMontant,
+  onChangeGroupe,
+  onSubmit,
+  label = "Ajouter",
+}: Props) {
   return (
-    <form onSubmit={submit} className="space-y-4">
-      <div className="flex flex-col">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+      className="space-y-4"
+    >
+      <div>
         <label className="font-medium">Nom</label>
         <input
           type="text"
           value={nom}
-          onChange={e => setNom(e.target.value)}
-          className="border rounded p-2"
+          onChange={(e) => onChangeNom(e.target.value)}
+          className="border p-2 w-full rounded"
           required
         />
       </div>
-      <div className="flex flex-col">
-        <label className="font-medium">Montant</label>
+      <div>
+        <label className="font-medium">Montant (€)</label>
         <input
           type="number"
-          min="0"
           step="0.01"
+          min="0"
           value={montant}
-          onChange={e => setMontant(e.target.value)}
-          className="border rounded p-2"
+          onChange={(e) => onChangeMontant(e.target.value)}
+          className="border p-2 w-full rounded"
           required
         />
       </div>
-      <div className="flex flex-col">
-        <label className="font-medium">Groupe</label>
+      <div>
+        <label className="font-medium">Catégorie</label>
         <select
           value={groupe}
-          onChange={e => setGroupe(e.target.value as Groupe)}
-          className="border rounded p-2"
+          onChange={(e) => onChangeGroupe(e.target.value as Groupe)}
+          className="border p-2 w-full rounded"
         >
-          {groupes.map(g => (
-            <option key={g} value={g}>
-              {g}
-            </option>
-          ))}
+          {["Revenus", "Besoins pour vivre", "Plaisirs et loisirs", "Liberté financière", "Ignoré"].map(
+            (g) => (
+              <option key={g} value={g}>
+                {g}
+              </option>
+            )
+          )}
         </select>
       </div>
-      <div className="space-x-2">
-        <button type="submit" className="bg-[#187072] text-white py-2 px-4 rounded">
-          {initial ? "Enregistrer" : "Ajouter"}
-        </button>
-        {onCancel && (
-          <button
-            type="button"
-            onClick={onCancel}
-            className="py-2 px-4 border rounded"
-          >
-            Annuler
-          </button>
-        )}
-      </div>
+      <button
+        type="submit"
+        className="bg-[#187072] text-white py-2 px-4 rounded w-full"
+      >
+        {label}
+      </button>
     </form>
   );
 }

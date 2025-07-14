@@ -1,50 +1,26 @@
 "use client";
-import { useState } from "react";
-import { Mouvement, Groupe } from "./types";
-import RepartitionBudget from "./RepartitionBudget";
 
-export default function EvolutionMensuelle({
-  mouvements,
-}: {
+import { Groupe, Mouvement } from "./types";
+
+type Props = {
   mouvements: Mouvement[];
-}) {
-  const months = Array.from(new Set(mouvements.map(m => m.mois))).sort();
-  const [selected, setSelected] = useState(months[months.length - 1] || "");
+  filtreGroupe: Groupe | "Tous";
+};
 
-  const filterMonth = (mois: string) =>
-    mouvements.filter(m => m.mois === mois);
-
-  const resume = (mois: string) => {
-    const list = filterMonth(mois);
-    const revenu = list
-      .filter(m => m.groupe === "Revenus")
-      .reduce((s, m) => s + m.montant, 0);
-    const dep = list
-      .filter(m => m.groupe !== "Revenus" && m.groupe !== "Ignoré")
-      .reduce((s, m) => s + m.montant, 0);
-    return { revenu, dep, solde: revenu - dep };
-  };
+export default function EvolutionMensuelle({ mouvements, filtreGroupe }: Props) {
+  const moisDisponibles = Array.from(new Set(mouvements.map((m) => m.mois))).sort();
 
   return (
-    <div className="space-y-4">
-      {months.length > 0 && (
-        <div className="flex justify-center">
-          <select
-            value={selected}
-            onChange={e => setSelected(e.target.value)}
-            className="border rounded p-2"
-          >
-            {months.map(m => (
-              <option key={m} value={m}>
-                {m}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      <RepartitionBudget mouvements={filterMonth(selected)} />
-
+    <div className="bg-white p-6 rounded shadow">
+      <h2 className="text-lg font-semibold mb-4 text-center flex items-center justify-center gap-1">
+        Évolution mensuelle
+        <span
+          title="Suivi de vos revenus, dépenses et solde mois par mois"
+          className="cursor-help text-xs text-gray-400"
+        >
+          ℹ️
+        </span>
+      </h2>
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b">
@@ -55,14 +31,27 @@ export default function EvolutionMensuelle({
           </tr>
         </thead>
         <tbody>
-          {months.map(m => {
-            const r = resume(m);
+          {moisDisponibles.map((mois) => {
+            const mouvementsDuMois = mouvements.filter((m) => m.mois === mois);
+            const revenus = mouvementsDuMois
+              .filter((m) => m.groupe === "Revenus")
+              .reduce((acc, m) => acc + m.montant, 0);
+            const depenses = mouvementsDuMois
+              .filter(
+                (m) =>
+                  ["Besoins pour vivre", "Plaisirs et loisirs", "Liberté financière"].includes(m.groupe)
+              )
+              .reduce((acc, m) => acc + m.montant, 0);
+            const solde = revenus - depenses;
+
             return (
-              <tr key={m} className="border-b hover:bg-gray-50">
-                <td className="p-2">{m}</td>
-                <td className="p-2 text-right">{r.revenu.toFixed(2)} €</td>
-                <td className="p-2 text-right">{r.dep.toFixed(2)} €</td>
-                <td className="p-2 text-right">{r.solde.toFixed(2)} €</td>
+              <tr key={mois} className="border-b">
+                <td className="p-2">{mois}</td>
+                <td className="p-2 text-right">{revenus.toFixed(2)} €</td>
+                <td className="p-2 text-right">{depenses.toFixed(2)} €</td>
+                <td className={`p-2 text-right ${solde >= 0 ? "text-green-600" : "text-red-600"}`}>
+                  {solde.toFixed(2)} €
+                </td>
               </tr>
             );
           })}
