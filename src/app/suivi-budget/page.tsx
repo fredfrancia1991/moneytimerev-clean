@@ -9,7 +9,8 @@ export default function PageSuiviBudget() {
     <main className="min-h-screen flex flex-col bg-[#F5F6FA] text-[#363945]">
       <Header />
 
-      <div className="flex-1 py-10 px-4 sm:px-6 lg:px-8 max-w-9xl mx-auto space-y-10">        <h1 className="text-3xl sm:text-4xl font-bold text-center text-[#26436E] transition-all duration-500 ease-out opacity-0 animate-fadeInUp">
+      <div className="flex-1 py-10 px-4 sm:px-6 lg:px-8 max-w-9xl mx-auto space-y-10">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center text-[#26436E] animate-fadeInUp">
           Mon tableau de bord budgétaire
         </h1>
 
@@ -23,23 +24,6 @@ export default function PageSuiviBudget() {
       </div>
 
       <Footer />
-
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fadeInUp {
-          animation: fadeInUp 0.6s ease-out forwards;
-        }
-      `}</style>
     </main>
   );
 }

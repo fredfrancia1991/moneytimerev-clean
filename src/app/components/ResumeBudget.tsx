@@ -1,9 +1,14 @@
 "use client";
 
+import { Mouvement } from "./types";
+
 type Props = {
+  mouvements: Mouvement[];
+  selectedMonth: string;
   revenu: number;
   solde: number;
 };
+
 
 export default function ResumeBudget({ revenu, solde }: Props) {
   return (
