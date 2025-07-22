@@ -1,6 +1,6 @@
 import './globals.css'
 import { Nunito } from 'next/font/google'
-import CookieBanner from './components/CookieBanner'
+import CookieBanner from '@/components/CookieBanner'
 
 const nunito = Nunito({
   subsets: ['latin'],

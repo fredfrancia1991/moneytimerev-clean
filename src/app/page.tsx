@@ -1,76 +1,65 @@
-"use client";
+'use client'
 
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Header from '@/components/Header'
 
-export default function HomePage() {
+export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col bg-[#F5F6FA] text-[#363945]">
+    <>
       <Header />
 
-      <div className="flex-1 py-24 px-6 max-w-3xl mx-auto space-y-24 text-center">
-        {/* Section 1 : Accroche */}
-        <section className="space-y-6">
-          <h1 className="text-3xl sm:text-4xl font-bold text-[#26436E]">
-            Vous ne savez plus où passe votre argent ?
-          </h1>
-          <p className="text-lg text-gray-700">
-            Vous n’êtes pas seul. MoneyTime Rev’ vous aide à y voir clair,<br />
-            pas à pas, sans jugement, avec des repères simples et utiles.
+      <main className="pt-24 space-y-24 px-6 pb-16 max-w-4xl mx-auto text-gray-900">
+        {/* 🏠 Accueil */}
+        <section className="text-center">
+          <h1 className="text-4xl font-bold mb-4">Bienvenue sur MoneyTime Rev’</h1>
+          <p className="text-lg mb-6">
+            Ta méthode simple et concrète pour reprendre le contrôle de tes finances personnelles avec la règle des 50/30/20.
           </p>
+          <a href="#contact" className="inline-block bg-[#187072] text-white px-6 py-3 rounded hover:bg-[#145c5c] transition">
+            Prendre contact
+          </a>
         </section>
 
-        {/* Section 2 : Inscription */}
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#26436E]">
-            Soyez informé dès le lancement
-          </h2>
-          <p className="text-gray-600">
-            MoneyTime Rev’ est en cours de finalisation. Laissez-nous votre e-mail pour être informé à l’ouverture.
+        {/* 📊 Section Méthode */}
+        <section id="methode">
+          <h2 className="text-2xl font-bold mb-4 text-[#26436E]">La méthode 50 / 30 / 20</h2>
+          <p className="mb-6">
+            Une répartition simple :
           </p>
-          <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Votre adresse e-mail"
-              className="flex-1 p-3 border border-gray-300 rounded"
-              disabled
-            />
-            <button
-              className="bg-[#187072] text-white px-6 py-3 rounded font-semibold cursor-not-allowed"
-              disabled
-            >
-              Être prévenu du lancement
+          <ul className="space-y-2 list-disc list-inside">
+            <li><strong>50 %</strong> pour tes besoins essentiels (loyer, alimentation, transport...)</li>
+            <li><strong>30 %</strong> pour tes envies (loisirs, sorties, abonnements…)</li>
+            <li><strong>20 %</strong> pour tes objectifs (épargne, remboursement, projets…)</li>
+          </ul>
+        </section>
+
+        {/* 💬 Section Coaching */}
+        <section id="coaching">
+          <h2 className="text-2xl font-bold mb-4 text-[#26436E]">Coaching personnalisé</h2>
+          <p className="mb-4">
+            Je t’accompagne étape par étape pour adapter cette méthode à ta réalité, te fixer des objectifs clairs, et suivre tes résultats chaque mois.
+          </p>
+          <p className="mb-6">
+            Disponible à la séance ou en suivi mensuel, selon tes besoins.
+          </p>
+          <a href="/diagnostique" className="inline-block bg-[#26436E] text-white px-6 py-3 rounded hover:bg-[#1e3456] transition">
+            Faire le diagnostic gratuit
+          </a>
+        </section>
+
+        {/* 📬 Section Contact */}
+        <section id="contact">
+          <h2 className="text-2xl font-bold mb-4 text-[#26436E]">Contact</h2>
+          <p className="mb-4">Tu veux en savoir plus ou démarrer ? Écris-moi directement :</p>
+          <form className="space-y-4 max-w-md">
+            <input type="text" placeholder="Ton prénom" className="w-full border border-gray-300 px-4 py-2 rounded" />
+            <input type="email" placeholder="Ton e-mail" className="w-full border border-gray-300 px-4 py-2 rounded" />
+            <textarea placeholder="Ton message" className="w-full border border-gray-300 px-4 py-2 rounded h-32" />
+            <button type="submit" className="bg-[#187072] text-white px-6 py-3 rounded hover:bg-[#145c5c] transition">
+              Envoyer
             </button>
           </form>
-          <p className="text-xs text-center text-gray-400">
-            (Formulaire inactif pour le moment – lancement prévu prochainement)
-          </p>
         </section>
-
-        {/* Section 3 : Comment ça se passe ? */}
-        <section className="space-y-6 text-left">
-          <h2 className="text-2xl font-semibold text-center text-[#26436E]">
-            Concrètement, comment ça se passe ?
-          </h2>
-          <p className="text-gray-700">
-            Vous ne recevrez pas un simple PDF ni un simulateur compliqué.
-          </p>
-          <p className="text-gray-700">
-            Tout commence par un diagnostic clair, pour comprendre votre situation actuelle.
-          </p>
-          <p className="text-gray-700">
-            Nous vous aidons ensuite à analyser vos dépenses, vos équilibres et vos marges de manœuvre.
-          </p>
-          <p className="text-gray-700">
-            Vous identifiez ce qui vous pèse, ce que vous pouvez ajuster, et ce qui fonctionne déjà bien.
-          </p>
-          <p className="text-gray-700">
-            Et surtout, vous avancez à votre rythme, avec un accompagnement solide et humain, si vous souhaitez aller plus loin.
-          </p>
-        </section>
-      </div>
-
-      <Footer />
-    </main>
-  );
+      </main>
+    </>
+  )
 }

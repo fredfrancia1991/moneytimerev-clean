@@ -6,8 +6,8 @@ export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn, onAuthStateChanged } from "../lib/localAuth";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 
 export default function Login() {
   const [email, setEmail] = useState("");

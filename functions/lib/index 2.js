@@ -37,22 +37,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.nextApp = void 0;
-const functions = __importStar(require("firebase-functions"));
+const https_1 = require("firebase-functions/v2/https");
+const logger = __importStar(require("firebase-functions/logger"));
 const next_1 = __importDefault(require("next"));
-const express_1 = __importDefault(require("express"));
-const isDev = process.env.NODE_ENV !== "production";
 const app = (0, next_1.default)({
-    dev: isDev,
+    dev: false,
     conf: {
         distDir: ".next"
     }
 });
 const handle = app.getRequestHandler();
-const server = (0, express_1.default)();
-server.all("*", (req, res) => {
-    return handle(req, res);
-});
-exports.nextApp = functions.https.onRequest(async (req, res) => {
+exports.nextApp = (0, https_1.onRequest)({ region: "europe-west1" }, async (req, res) => {
+    logger.info("Handling SSR request with Next.js", { structuredData: true });
     await app.prepare();
-    server(req, res);
+    handle(req, res);
 });

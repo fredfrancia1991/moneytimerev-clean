@@ -7,11 +7,7 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "lib",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -20,17 +16,16 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
+    },
     "plugins": [
       {
         "name": "next"
       }
     ]
   },
-  "include": [
-    "index.ts",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "lib"
-  ]
+  "include": ["index.ts", ".next/types/**/*.ts", "src"],
+  "exclude": ["lib"]
 }

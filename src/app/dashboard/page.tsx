@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "../lib/localAuth";
 import { getDiagnostics, Diagnostic } from "../lib/localDb";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 
 
 export default function Dashboard() {
