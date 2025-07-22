@@ -1,7 +1,7 @@
 "use client"
 export const dynamic = "force-dynamic"
 
-import Tabs, { Tab } from '../../components/Tabs'
+import Tabs, { Tab } from '@/components/Tabs'
 
 export default function ClientDashboard() {
   const tabs: Tab[] = [
